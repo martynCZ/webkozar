@@ -1,4 +1,5 @@
 import Header from "./components/Header/Header"
+import Reference from "./components/Reference/Reference"
 import Sidebar from "./components/Sidebar/Sidebar"
 import Sluzby from "./components/Sluzby/Sluzby"
 import Uvod from "./components/Uvod/Uvod"
@@ -13,11 +14,12 @@ const App = () => {
       </div>
       <div className="big:mx-48 lg:mx-20 mx-4 relative">
         <Header />
-        <div className="flex gap-10 big:translate-y-[150px] translate-y-[100px]">
+        <div className="flex gap-10 big:translate-y-[150px] ">
           <Sidebar />
           <div className="">
             <Uvod />
             <Sluzby />
+            <Reference />
           </div>
         </div>
       </div>
