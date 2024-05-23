@@ -4,6 +4,7 @@ const Sluzby = () => {
   const [gradientPositions, setGradientPositions] = useState({
     firstBox: { x: '50%', y: '50%', opacity: 0 },
     secondBox: { x: '50%', y: '50%', opacity: 0 },
+    thirdBox: { x: '50%', y: '50%', opacity: 0 }
   });
 
   const handleMouseMove = (e, boxName) => {

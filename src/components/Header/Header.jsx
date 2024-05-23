@@ -10,10 +10,10 @@ const Header = () => {
         </div>
         <div className='flex items-center gap-2'>
             <ul className='flex gap-20'>
-                <li>Služby</li>
-                <li>Reference</li>
-                <li>Ceník</li>
-                <li>Kontakty</li>
+                <li className='hover:text-gray transition'><a href="#sluzby">Služby</a></li>
+                <li className='hover:text-gray transition'><a href="#reference">Reference</a></li>
+                <li className='hover:text-gray transition'><a href="#cenik">Ceník</a></li>
+                <li className='hover:text-gray transition'><a href="#kontakty">Kontakty</a></li>
             </ul>
         </div>
 
