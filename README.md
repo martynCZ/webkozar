@@ -1,16 +1,49 @@
-# React + Vite
+# Webkozar - Tvorba Webových Stránek
+Moderní, interaktivní a vizuálně prémiová webová prezentace [webkozar.cz](https://webkozar.cz/) - Tvorba webových stránek Nový Jičín). Projekt klade obrovský důraz na špičkový UI/UX design, plynulé mikro-interakce a moderní "dark-neon" estetiku s využitím glassmorphismu.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 🛠️ Využité technologie
+* **[React](https://react.dev/)** - jádro aplikace
+* `ViteJS`
+* **[Tailwind CSS](https://tailwindcss.com/)** - framework pro stylování
+**[CSS]()** - vizuální 
+* **[Figma](https://www.figma.com/)** - návrh designu a drobné grafické úpravy
+* **[Lucide React](https://lucide.dev/)** - open-source sada ikon
+* **[Framer Motion](https://motion.dev/)** (`motion/react`) - engine pro komplexní animace
+* **[HTML](https://www.w3.org/html/)** - základní stavební kámen webových stránek
+* **Fonty:** [Space Grotesk](https://fonts.google.com/specimen/Space+Grotesk) (nadpisy) a [Outfit](https://fonts.google.com/specimen/Outfit) (běžný text)
 
-Currently, two official plugins are available:
+## Komponenty
+* `Header` - plovoucí _fluid glass_ lišta s navigací
+* `Hero` - hlavní sekce s gradientním textem a `FluidBlob`
+* `FluidBlob`- Animovaná komponenta obsažená v sekci `Hero`
+* `Services`- Nabídka služeb ve formě karet. Webové stránky, e-shopy, SEO, grafické práce
+* `Process`- Karty průběhu tvorby - od odhadu ceny až po předání
+* `Features` - Vyzdvihnutí klíčových výhod našich řešení
+* `Pricing` - Karty obsahující ceník a specifikace balíčků
+* `Reference` - Výběr již vytvořených a spuštěných projektů různých kategorií
+* `Contacts` - Kontaktní informace a formulář pro poptávku
+* `Footer` - Zápatí stránky s důležitými odkazy
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Instalace a spuštění
+1. **Naklonuj si repozitář:**
+   ```bash
+   git clone https://github.com/martynCZ/webkozar.git
+   
+2. **Přejdi do složky projektu:**
+   ```bash
+   cd webkozar
 
-## React Compiler
+3. **Nainstaluj závislosti:**
+   ```bash
+   npm install
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+4. **Spusť vývojový server:**
+   ```bash
+   npm run dev
 
-## Expanding the ESLint configuration
+## Autor
+**martynCZ** `(Martin Kozar)`
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+* Github: [@martynCZ](https://github.com/martynCZ)
+* LinkedIn: [@Martin Kozar](www.linkedin.com/in/martin-kozar-306bb8305)
+* Web: [webkozar.cz](https://webkozar.cz)
