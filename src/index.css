@@ -1,0 +1,15 @@
+@import "tailwindcss";
+@import "@fontsource/space-grotesk";
+@import "@fontsource/outfit";
+
+:root {
+  --background: #050117;
+}
+body{
+  background-color: var(--background);
+  font-family: 'Outfit', sans-serif;
+}
+h1, h2, h3, h4, h5, h6 {
+  color: #fff;
+  font-family: 'Space Grotesk', sans-serif;
+}
