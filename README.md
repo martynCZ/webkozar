@@ -1,15 +1,15 @@
 # Webkozar - Tvorba Webových Stránek
 Moderní, interaktivní a vizuálně prémiová webová prezentace [webkozar.cz](https://webkozar.cz/) - Tvorba webových stránek Nový Jičín). Projekt klade obrovský důraz na špičkový UI/UX design, plynulé mikro-interakce a moderní "dark-neon" estetiku s využitím glassmorphismu.
 
-## 🛠️ Využité technologie
+## Využité technologie
 * **[React](https://react.dev/)** - jádro aplikace
-* `ViteJS`
+* **[Vite](https://vitejs.dev/)** - vývojový server a buildovací nástroj
 * **[Tailwind CSS](https://tailwindcss.com/)** - framework pro stylování
-**[CSS]()** - vizuální 
+**[CSS3]()** - vizuální efekty, maskování a specifické úpravy vzhledu
 * **[Figma](https://www.figma.com/)** - návrh designu a drobné grafické úpravy
 * **[Lucide React](https://lucide.dev/)** - open-source sada ikon
 * **[Framer Motion](https://motion.dev/)** (`motion/react`) - engine pro komplexní animace
-* **[HTML](https://www.w3.org/html/)** - základní stavební kámen webových stránek
+* **[HTML5](https://developer.mozilla.org/en-US/docs/Web/HTML)** - základní stavební kámen webových stránek
 * **Fonty:** [Space Grotesk](https://fonts.google.com/specimen/Space+Grotesk) (nadpisy) a [Outfit](https://fonts.google.com/specimen/Outfit) (běžný text)
 
 ## Komponenty
