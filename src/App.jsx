@@ -1,7 +1,8 @@
 import Header from './components/Header'
 import AnimatedBackground from './components/AnimatedBackground'
 import Hero from './components/Hero'
-import Process from './components/Process/Process'
+import Process from './components/Process'
+import Pricing from './components/Pricing'
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <main>
         <Hero />
         <Process />
+        <Pricing />
       </main>
     </div>
   )

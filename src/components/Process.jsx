@@ -32,11 +32,10 @@ function Process() {
   return (
     <section className="relative py-24 px-4">
       <div className="max-w-[70%] mx-auto">
-        {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: false }}
           transition={{ duration: 0.8 }}
           className="text-center mb-20"
         >
@@ -45,9 +44,17 @@ function Process() {
             style={{ fontFamily: 'Space Grotesk, sans-serif' }}
           >
             Jak{' '}
-            <span className="bg-gradient-to-r from-[#0EC3BF] to-purple-500 bg-clip-text text-transparent">
+            <motion.span 
+              className="bg-gradient-to-r from-[#0EC3BF] via-purple-500 to-[#0EC3BF] bg-[length:200%_auto] bg-clip-text text-transparent"
+              animate={{ backgroundPosition: ["0% center", "-200% center"] }}
+              transition={{ 
+                duration: 4, 
+                repeat: Infinity, 
+                ease: "linear" 
+              }}
+            >
               tvoříme web
-            </span>
+            </motion.span>
           </h2>
           <p 
             className="text-xl text-gray-400"
@@ -65,7 +72,7 @@ function Process() {
                   key={step.title}
                   initial={{ opacity: 0, y: 50 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
+                  viewport={{ once: false }}
                   transition={{ duration: 0.6, delay: index * 0.15 }}
                   className="relative"
                 >
