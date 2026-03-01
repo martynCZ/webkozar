@@ -2,8 +2,8 @@ import { motion } from 'motion/react';
 import { Check } from 'lucide-react';
 function Pricing() {
   return (
-    <section className="relative py-24 px-4">
-      <div className="max-w-[70%] mx-auto">
+    <section className="relative py-24 px-4 scroll-mt-8 min-h-screen" id="cenik" >
+      <div className="max-w-[80%] mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}

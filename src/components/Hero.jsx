@@ -5,7 +5,7 @@ import FluidBlob from './FluidBlob';
 function Hero() {
   return (
     <section className="relative min-h-screen flex items-center justify-center px-4 pt-32 pb-20">
-      <div className="max-w-[70%] w-full mx-auto grid lg:grid-cols-2 items-center gap-12">
+      <div className="max-w-[80%] w-full mx-auto grid lg:grid-cols-2 items-center gap-12">
         <motion.div
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
@@ -57,7 +57,7 @@ function Hero() {
               className="group px-8 py-4 rounded-full bg-gradient-to-r from-[#0EC3BF] to-purple-600 text-white font-semibold shadow-[0_0_40px_rgba(14,195,191,0.6)] hover:shadow-[0_0_60px_rgba(14,195,191,0.8)] transition-all duration-300 flex items-center gap-2"
               style={{ fontFamily: 'Outfit, sans-serif' }}
             >
-              <span className='!bg-[rgba(0,0,0,0)]'>Start Your Project</span>
+              <span className='!bg-[rgba(0,0,0,0)]'>Získejte svůj web</span>
               <ArrowRight className="!bg-[rgba(0,0,0,0)] w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </motion.button>
 
@@ -68,7 +68,7 @@ function Hero() {
               className="px-8 py-4 rounded-full bg-white/5 backdrop-blur-xl border border-white/20 text-white font-semibold hover:bg-white/10 hover:border-[#0EC3BF]/50 transition-all duration-300"
               style={{ fontFamily: 'Outfit, sans-serif' }}
             >
-              View Our Work
+              Podívejte se na naše projekty
             </motion.button>
           </div>
 

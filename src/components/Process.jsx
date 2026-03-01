@@ -31,7 +31,7 @@ const steps = [
 function Process() {
   return (
     <section className="relative py-24 px-4">
-      <div className="max-w-[70%] mx-auto">
+      <div className="max-w-[80%] mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
