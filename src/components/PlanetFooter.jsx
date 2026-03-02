@@ -2,7 +2,7 @@ import Spline from '@splinetool/react-spline';
 
 function PlanetFooter() {
   return (
-     <Spline scene="https://prod.spline.design/rkn4Khns6AVE82CD/scene.splinecode" />
+         <Spline scene="https://prod.spline.design/l6OuHdBcHb1X8kkn/scene.splinecode" />
   );
 }
 
