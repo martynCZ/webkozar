@@ -132,7 +132,7 @@ function Technologies() {
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: false }}
-                transition={{ duration: 0.6, delay: index * 0.15 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
                 className="relative"
               >
                 <div className="relative p-6 rounded-2xl bg-gradient-to-br from-white/8 via-white/4 to-transparent backdrop-blur-xl border border-white/15 shadow-[0_0_40px_rgba(14,195,191,0.15)] hover:shadow-[0_0_60px_rgba(14,195,191,0.3)] transition-all duration-500 group">
@@ -157,10 +157,17 @@ function Technologies() {
           })}
         </div>
         
-      </div> 
-      <div className='absolute -bottom-35 left-0 right-0 z-[-1]'>
-            <PlanetFooter />
       </div>
+      <motion.div
+                initial={{ opacity: 0}}
+                whileInView={{ opacity: 1}}
+                viewport={{ once: false }}
+                transition={{ duration: 0.6, delay: 0.5}}
+              > 
+        <div className='absolute -bottom-35 left-0 w-full 2xl:w-2/3 mx-auto right-0 z-[-1]'>
+              <PlanetFooter />
+        </div>
+      </motion.div>
     </section>
   )
 }

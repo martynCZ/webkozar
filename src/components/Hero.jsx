@@ -75,9 +75,9 @@ function Hero() {
           {/* Statistiky */}
           <div className="grid grid-cols-3 gap-6 pt-8">
             {[
-              { value: '500+', label: 'Projects' },
-              { value: '50+', label: 'Clients' },
-              { value: '99%', label: 'Satisfaction' }
+              { value: '40+', label: 'Projektů' },
+              { value: '30+', label: 'Klientů' },
+              { value: '99%', label: 'Spokojenost' }
             ].map((stat, index) => (
               <motion.div
                 key={stat.label}
