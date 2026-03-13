@@ -3,10 +3,8 @@ import { motion } from 'motion/react';
 import { Menu } from 'lucide-react';
 
 function Header() {
-  // State pro sledování aktuálně hovernuté položky
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
-  // Pole odkazů pro čistší kód
   const navLinks = [
     { name: 'Tvorba', href: '#tvorba' },
     { name: 'Reference', href: '#reference' },
@@ -23,13 +21,14 @@ function Header() {
     >
       <nav className="relative flex items-center justify-between px-8 py-4 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_0_40px_rgba(14,195,191,0.15)]">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#0EC3BF] to-purple-600 shadow-[0_0_20px_rgba(14,195,191,0.6)]" />
+          <div className='flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-[#0EC3BF] to-purple-600 shadow-[0_0_20px_rgba(14,195,191,0.6)]'>
+            
+          </div>        
           <span className="text-xl font-bold text-white" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
             webkozar
           </span>
         </div>
 
-        {/* Upravené Desktop Menu */}
         <div className="hidden md:flex items-center gap-2 menu" style={{ fontFamily: 'Outfit, sans-serif' }}>
           {navLinks.map((link, index) => (
             <a
@@ -37,7 +36,6 @@ function Header() {
               href={link.href}
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
-              // Relative pozice pro absolute pozadí, z-10 drží text nahoře
               className="relative px-4 py-2 text-gray-300 hover:text-white transition-colors duration-300 z-10"
             >
               {hoveredIndex === index && (
@@ -56,12 +54,12 @@ function Header() {
         </div>
 
         <div className="hidden md:block">
-          <button className="px-6 py-2.5 rounded-full bg-gradient-to-r from-[#0EC3BF] to-purple-600 text-white font-medium shadow-[0_0_30px_rgba(14,195,191,0.5)] hover:shadow-[0_0_50px_rgba(14,195,191,0.7)] transition-all duration-300">
+          <button aria-label="Kontaktovat přes formulář" className="px-6 py-2.5 rounded-full bg-gradient-to-r from-[#0EC3BF] to-purple-600 text-white font-medium shadow-[0_0_30px_rgba(14,195,191,0.5)] hover:shadow-[0_0_50px_rgba(14,195,191,0.7)] transition-all duration-300">
             Kontaktujte nás!
           </button>
         </div>
 
-        <button className="md:hidden text-white">
+        <button aria-label="Otevřít hlavní menu" className="md:hidden text-white">
           <Menu className="w-6 h-6" />
         </button>
       </nav>

@@ -31,7 +31,7 @@ const steps = [
 function Process() {
   return (
     <section className="relative py-24 px-4">
-      <div className="max-w-[80%] mx-auto">
+      <div className="max-w-[90%] md:max-w-[80%] mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -43,7 +43,7 @@ function Process() {
             className="text-4xl md:text-5xl font-bold text-white mb-4"
             style={{ fontFamily: 'Space Grotesk, sans-serif' }}
           >
-            Jak{' '}
+            Jak se{' '}
             <motion.span 
               className="bg-gradient-to-r from-[#0EC3BF] via-purple-500 to-[#0EC3BF] bg-[length:200%_auto] bg-clip-text text-transparent"
               animate={{ backgroundPosition: ["0% center", "-200% center"] }}
@@ -53,7 +53,7 @@ function Process() {
                 ease: "linear" 
               }}
             >
-              tvoříme web
+              tvoří webové stránky
             </motion.span>
           </h2>
           <p 
@@ -77,43 +77,32 @@ function Process() {
                   className="relative"
                 >
                   <div className="relative p-6 rounded-2xl bg-gradient-to-br from-white/8 via-white/4 to-transparent backdrop-blur-xl border border-white/15 shadow-[0_0_40px_rgba(14,195,191,0.15)] hover:shadow-[0_0_60px_rgba(14,195,191,0.3)] transition-all duration-500 group">
-                    {/* Step Number */}
                     <div 
                       className="absolute -top-4 -right-4 w-12 h-12 rounded-full bg-gradient-to-br from-[#0EC3BF] to-purple-600 flex items-center justify-center text-white font-bold shadow-[0_0_30px_rgba(14,195,191,0.6)]"
                       style={{ fontFamily: 'Space Grotesk, sans-serif' }}
                     >
                       {step.number}
                     </div>
-
-                    {/* Glowing Icon */}
                     <div className="mb-6 inline-flex p-4 rounded-xl bg-gradient-to-br from-[#0EC3BF]/20 to-purple-600/20 border border-[#0EC3BF]/30 shadow-[0_0_20px_rgba(14,195,191,0.3)]">
-                      <Icon className="w-8 h-8 text-[#0EC3BF]" />
+                      <Icon className="w-8 h-8 text-[#0EC3BF]" aria-hidden="true" />
                     </div>
-
-                    {/* Title */}
                     <h3 
                       className="text-2xl font-bold text-white mb-3"
                       style={{ fontFamily: 'Space Grotesk, sans-serif' }}
                     >
                       {step.title}
                     </h3>
-
-                    {/* Description */}
                     <p 
                       className="text-gray-400 leading-relaxed"
                       style={{ fontFamily: 'Outfit, sans-serif' }}
                     >
                       {step.description}
                     </p>
-
-                    {/* Hover Glow */}
                     <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#0EC3BF]/10 via-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   </div>
-
-                  {/* Arrow Connector (Desktop) */}
                   {index < steps.length - 1 && (
                     <div className="hidden lg:block absolute top-1/2 -right-4 w-8 h-8 -translate-y-1/2 z-10">
-                      <svg 
+                      <svg aria-hidden="true"
                         className="w-full h-full text-[#0EC3BF]/50" 
                         fill="none" 
                         stroke="currentColor" 

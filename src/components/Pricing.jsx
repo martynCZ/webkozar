@@ -2,8 +2,8 @@ import { motion } from 'motion/react';
 import { Check } from 'lucide-react';
 function Pricing() {
   return (
-    <section className="relative py-24 px-4 scroll-mt-8 min-h-screen" id="cenik" >
-      <div className="max-w-[80%] mx-auto">
+    <section className="relative md:py-24 px-4 scroll-mt-8 min-h-screen" id="cenik" >
+      <div className="max-w-[90%] md:max-w-[80%] mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -15,7 +15,7 @@ function Pricing() {
             className="text-4xl md:text-5xl font-bold text-white mb-4"
             style={{ fontFamily: 'Space Grotesk, sans-serif' }}
           >
-            Ceník{' '}
+            Ceník vytvoření{' '}
             <motion.span 
               className="bg-gradient-to-r from-[#0EC3BF] via-purple-500 to-[#0EC3BF] bg-[length:200%_auto] bg-clip-text text-transparent"
               animate={{ backgroundPosition: ["0% center", "-200% center"] }}
@@ -25,7 +25,7 @@ function Pricing() {
                 ease: "linear" 
               }}
             >
-              služeb
+              webových stránek
             </motion.span>
           </h2>
           <p 
@@ -39,7 +39,7 @@ function Pricing() {
             <motion.div
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{  }}
+                viewport={{ once: false }}
                 transition={{ duration: 0.6 }}
                 className="relative"
                 >
@@ -47,7 +47,7 @@ function Pricing() {
                     <h3 
                       className="text-2xl font-bold text-white mb-4"              
                     >
-                      Základní
+                      Základní web
                     </h3>
                     <p 
                       className="text-gray-400 leading-relaxed"
@@ -55,7 +55,7 @@ function Pricing() {
                       Ideální pro malé projekty a osobní weby
                     </p>
                     <p
-                        className="mt-3 mb-4 text-5xl font-bold text-white leading-relaxed"
+                        className="mt-3 mb-4 text-4xl md:text-5xl font-bold text-white leading-relaxed"
                         style={{ fontFamily: 'Space Grotesk, sans-serif' }}
                     >
                         <span className='text-gray-400 mr-1 leading-relaxed text-lg font-regular font-normal'>od </span>
@@ -102,7 +102,7 @@ function Pricing() {
                     <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className="px-8 py-4 w-full rounded-full bg-white/5 backdrop-blur-xl border border-white/20 text-white font-semibold hover:bg-white/10 hover:border-[#0EC3BF]/50 transition-all duration-300"
+                        className="px-8 py-4 w-full cursor-pointer rounded-full bg-white/5 backdrop-blur-xl border border-white/20 text-white font-semibold hover:bg-white/10 hover:border-[#0EC3BF]/50 transition-all duration-300"
                         style={{ fontFamily: 'Outfit, sans-serif' }}
                         >
                         Vybrat balíček
@@ -117,20 +117,20 @@ function Pricing() {
                 transition={{ duration: 0.6 }}
                 className="relative"
                 >
-                    <div className="relative bottom-[5%] hover:bottom-[7%] p-10 rounded-4xl bg-gradient-to-br from-white/8 via-white/4 to-transparent backdrop-blur-xl border border-[#0EC3BF]/70 shadow-[0_0_80px_rgba(14,195,191,0.4)] hover:shadow-[0_0_100px_rgba(14,195,191,0.5)] hover: transition-all duration-900 group">
+                    <div className="relative md:bottom-[5%] hover:bottom-[7%] p-10 rounded-4xl bg-gradient-to-br from-white/8 via-white/4 to-transparent backdrop-blur-xl border border-[#0EC3BF]/70 shadow-[0_0_80px_rgba(14,195,191,0.4)] hover:shadow-[0_0_100px_rgba(14,195,191,0.5)] hover:transition-all duration-900 group">
                     <h3 
                       className="text-2xl font-bold text-white mb-4"              
                     >
-                      Standardní
+                      Standardní web
                     </h3>
                     
                     <p 
                       className="text-gray-400 leading-relaxed"
                     >
-                      Nejoblíbeější volba pro firmy
+                      Nejoblíbenější volba pro firmy
                     </p>
                     <p 
-                        className="mt-3 mb-4 text-5xl font-bold text-white leading-relaxed"
+                        className="mt-3 mb-4 text-4xl md:text-5xl font-bold text-white leading-relaxed"
                         style={{ fontFamily: 'Space Grotesk, sans-serif' }}
                     >
                         <span className='text-gray-400 mr-1 leading-relaxed text-lg font-regular font-normal'>od </span>
@@ -188,7 +188,7 @@ function Pricing() {
                     <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className="group w-full text-center px-8 py-4 rounded-full bg-gradient-to-r from-[#0EC3BF] to-purple-600 text-white font-semibold shadow-[0_0_40px_rgba(14,195,191,0.6)] hover:shadow-[0_0_60px_rgba(14,195,191,0.8)] transition-all duration-300"
+                        className="group w-full cursor-pointer text-center px-8 py-4 rounded-full bg-gradient-to-r from-[#0EC3BF] to-purple-600 text-white font-semibold shadow-[0_0_40px_rgba(14,195,191,0.6)] hover:shadow-[0_0_60px_rgba(14,195,191,0.8)] transition-all duration-300"
                         style={{ fontFamily: 'Outfit, sans-serif' }}
                         >
                         <span className='!bg-[rgba(0,0,0,0)]'>Vybrat balíček</span>
@@ -208,7 +208,7 @@ function Pricing() {
                     <h3 
                       className="text-2xl font-bold text-white mb-4"              
                     >
-                      Na míru
+                      Web na míru
                     </h3>
                     <p 
                       className="text-gray-400 leading-relaxed"
@@ -216,7 +216,7 @@ function Pricing() {
                       Komplexní řešení pro velké projekty
                     </p>
                     <p
-                        className="mt-3 mb-4 text-5xl font-bold text-white leading-relaxed"
+                        className="mt-3 mb-4 text-4xl md:text-5xl font-bold text-white leading-relaxed"
                         style={{ fontFamily: 'Space Grotesk, sans-serif' }}
                     >
                         <span className='text-gray-400 mr-1 leading-relaxed text-lg font-regular font-normal'>od </span>
@@ -263,7 +263,7 @@ function Pricing() {
                     <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className="px-8 py-4 w-full rounded-full bg-white/5 backdrop-blur-xl border border-white/20 text-white font-semibold hover:bg-white/10 hover:border-[#0EC3BF]/50 transition-all duration-300"
+                        className="px-8 py-4 w-full cursor-pointer rounded-full bg-white/5 backdrop-blur-xl border border-white/20 text-white font-semibold hover:bg-white/10 hover:border-[#0EC3BF]/50 transition-all duration-300"
                         style={{ fontFamily: 'Outfit, sans-serif' }}
                         >
                         Vybrat balíček

@@ -8,6 +8,8 @@ import Process from './components/Process'
 import Pricing from './components/Pricing'
 import { LoadingScreen } from './components/LoadingScreen'
 import Technologies from './components/Technologies'
+import { Reference } from './components/Reference'
+import Faq from './components/Faq'
 
 function App() {
   const [isLoading, setIsLoading] = useState(true)
@@ -26,6 +28,8 @@ function App() {
         <Process />
         <Pricing />
         <Technologies />
+        <Reference />
+        <Faq />
       </main>
     </div>
   )

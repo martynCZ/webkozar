@@ -9,36 +9,38 @@ function FluidBlob({ className = '', size = 'lg', delay = 0 }) {
   };
 
   return (
-     <motion.div
+    <motion.div
       className={`${sizeClasses[size]} ${className}`}
       initial={{ opacity: 0, scale: 0.8 }}
+      style={{ willChange: 'transform, opacity' }}
       animate={{ 
-        opacity: [0.8, 1, 0.8],
-        scale: [1, 1.05, 1],
-        rotate: [0, 5, -5, 0]
+        opacity: [0.7, 1, 0.7],
+        scale: [1, 1.03, 1],
+        rotate: [0, 3, -3, 0]
       }}
       transition={{ 
-        duration: 8,
+        duration: 10,
         repeat: Infinity,
         delay,
         ease: "easeInOut"
       }}
     >
       <div className="relative w-full h-full">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0EC3BF] via-purple-500 to-fuchsia-500 rounded-[40%_60%_70%_30%/40%_50%_60%_50%] blur-3xl opacity-60" />
+        <div 
+          className="absolute inset-[-20%] rounded-full opacity-40 pointer-events-none" 
+          style={{ 
+            background: 'radial-gradient(circle, rgba(14,195,191,0.6) 0%, rgba(147,51,234,0.3) 40%, transparent 70%)',
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0EC3BF] via-purple-600 to-fuchsia-600 rounded-[40%_60%_70%_30%/40%_50%_60%_50%] opacity-90 shadow-[inset_0_0_40px_rgba(255,255,255,0.2)]" />       
+        <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-black/20 rounded-[40%_60%_70%_30%/40%_50%_60%_50%] border border-white/30" />       
         
-        {/* 2. TĚLO BLOBU - Tohle chybělo! Plná barva, aby to nebyla černá díra */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0EC3BF] via-purple-600 to-fuchsia-600 rounded-[40%_60%_70%_30%/40%_50%_60%_50%] opacity-90" />
-        
-        {/* 3. SKLENĚNÁ TEXTURA - Dodá tomu lesk a pevný okraj */}
-        <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-white/5 to-transparent rounded-[40%_60%_70%_30%/40%_50%_60%_50%] border border-white/40" />
-        
-        {/* 4. ODLESK - Zvýrazní 3D efekt koule */}
-        <div className="absolute top-[15%] left-[15%] w-1/3 h-1/3 bg-white rounded-full blur-2xl opacity-60 pointer-events-none" />      
-        
+        <div 
+          className="absolute top-[10%] left-[15%] w-1/3 h-1/3 rounded-full pointer-events-none" 
+        />      
       </div>
     </motion.div>
-  )
+  );
 }
 
 export default FluidBlob;

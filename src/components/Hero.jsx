@@ -5,7 +5,7 @@ import FluidBlob from './FluidBlob';
 function Hero() {
   return (
     <section className="relative min-h-screen flex items-center justify-center px-4 pt-32 pb-20">
-      <div className="max-w-[80%] w-full mx-auto grid lg:grid-cols-2 items-center gap-12">
+      <div className="max-w-[90%] md:max-w-[80%] w-full mx-auto grid lg:grid-cols-2 items-center gap-12">
         <motion.div
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
@@ -19,8 +19,8 @@ function Hero() {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-sm border border-[#0EC3BF]/30 text-[#0EC3BF] text-sm font-medium"
             style={{ fontFamily: 'Outfit, sans-serif' }}
           >
-            <Sparkles className="w-4 h-4" />
-            <span>Web - E-shop - Grafika</span>
+            <Sparkles className="w-4 h-4" aria-hidden="true"/>
+            <span>Tvorba webů • Loga • SEO optimalizace</span>
           </motion.div>
           
           <h1 
@@ -29,40 +29,43 @@ function Hero() {
           >
             Tvorba{' '}
             <span className="relative inline-block">
-              <span className="bg-gradient-to-r from-[#0EC3BF] via-purple-500 to-fuchsia-500 bg-clip-text text-transparent animate-pulse">
-                Webových
+              <span className="bg-gradient-to-r from-[#0EC3BF] via-purple-500 to-fuchsia-500 bg-clip-text text-transparent animate-pulse pb-2 lg:pb-0">
+                webových stránek
               </span>
               <motion.span
-                className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-[#0EC3BF] to-purple-600 rounded-full"
+                className="absolute bottom-0 lg:-bottom-2 left-0 w-full h-1 bg-gradient-to-r from-[#0EC3BF] to-purple-600 rounded-full"
                 initial={{ scaleX: 0 }}
                 animate={{ scaleX: 1 }}
                 transition={{ duration: 0.8, delay: 0.8 }}
               />
             </span>
             <br />
-            Stránek <br />Nový Jičín
+            <span className="text-4xl md:text-5xl lg:text-6xl text-gray-200">
+              Nový Jičín & Ostrava
+            </span>
           </h1>
           
           <p 
             className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto lg:mx-0"
             style={{ fontFamily: 'Outfit, sans-serif' }}
           >
-            Již řadu let vytváříme webové stránky, které nejen osloví, ale především přináší hodnotu a výsledky. Pojďme společně vytvořit web, který zaujme a posune váš byznys dál.
-          </p>
+            Specializujeme se na tvorbu moderních webů, které vás odliší od konkurence. Spojujeme špičkový webdesign se silnou SEO optimalizací, aby vás zákazníci v regionu snadno našli.          </p>
           
           <div className="flex flex-col sm:flex-row gap-4 items-center justify-center lg:justify-start">
             <motion.button
+              aria-label="Přejít na kontaktní formulář pro získání webu"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="group px-8 py-4 rounded-full bg-gradient-to-r from-[#0EC3BF] to-purple-600 text-white font-semibold shadow-[0_0_40px_rgba(14,195,191,0.6)] hover:shadow-[0_0_60px_rgba(14,195,191,0.8)] transition-all duration-300 flex items-center gap-2"
               style={{ fontFamily: 'Outfit, sans-serif' }}
             >
               <span className='!bg-[rgba(0,0,0,0)]'>Získejte svůj web</span>
-              <ArrowRight className="!bg-[rgba(0,0,0,0)] w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight aria-hidden="true" className="!bg-[rgba(0,0,0,0)] w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </motion.button>
 
             {/* Secondary Frosted Glass Button */}
             <motion.button
+              aria-label="Zobrazit naše projekty"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="px-8 py-4 rounded-full bg-white/5 backdrop-blur-xl border border-white/20 text-white font-semibold hover:bg-white/10 hover:border-[#0EC3BF]/50 transition-all duration-300"

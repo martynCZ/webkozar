@@ -1,5 +1,7 @@
+import { Suspense, lazy } from 'react';
 import { motion } from 'motion/react';
-import PlanetFooter from './PlanetFooter';
+
+const PlanetFooter = lazy(() => import('./PlanetFooter'));
 
 const tech = [
   {
@@ -93,7 +95,7 @@ const tech = [
 
 function Technologies() {
   return (
-    <section className="relative overflow-hidden pt-20 mb-64">
+    <section className="relative overflow-hidden pt-20">
       <div className="max-w-[80%] mx-auto relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -163,9 +165,12 @@ function Technologies() {
                 whileInView={{ opacity: 1}}
                 viewport={{ once: false }}
                 transition={{ duration: 0.6, delay: 0.5}}
+                className=''
               > 
-        <div className='absolute -bottom-35 left-0 w-full 2xl:w-2/3 mx-auto right-0 z-[-1]'>
-              <PlanetFooter />
+        <div className='hidden lg:block absolute -bottom-35 left-0 w-full 2xl:w-2/3 mx-auto right-0 z-[-1]'>
+          <Suspense fallback={<div className="w-full h-[500px] flex items-center justify-center text-white/50">Načítání 3D modelu...</div>}>
+            <PlanetFooter />
+          </Suspense>
         </div>
       </motion.div>
     </section>
