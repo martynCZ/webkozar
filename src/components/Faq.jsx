@@ -69,7 +69,7 @@ function Faq() {
 
             return (
               <motion.div
-                key={index} // Oprava klíče (původně bylo key={faqs.number}, což v poli chybělo)
+                key={index} 
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: false }}
@@ -80,7 +80,6 @@ function Faq() {
                     : 'bg-white/5 border-white/10 hover:border-white/20'
                 }`}
               >
-                {/* Hlavička - Klikatelná */}
                 <button
                   onClick={() => toggleAccordion(index)}
                   className="w-full p-6 py-7 flex justify-between items-center text-left cursor-pointer group"
@@ -88,7 +87,7 @@ function Faq() {
                   aria-controls={`faq-answer-${index}`}
                 >
                   <h3 
-                    className={`text-lg md:text-xl font-bold pr-8 transition-colors duration-300 ${
+                    className={`text-md md:text-xl font-bold pr-8 transition-colors duration-300 ${
                       isOpen ? 'text-[#0EC3BF]' : 'text-white group-hover:text-gray-200'
                     }`}                
                   >
@@ -107,8 +106,6 @@ function Faq() {
                     </motion.div>
                   </div>
                 </button>
-
-                {/* Tělo - Odpověď s animací */}
                 <AnimatePresence initial={false}>
                   {isOpen && (
                     <motion.div
@@ -123,12 +120,28 @@ function Faq() {
                           {faq.answer}
                         </p>
                       </div>
-                    </motion.div>
-                  )}
+                    </motion.div>                
+                  )}               
                 </AnimatePresence>
               </motion.div>
             );
           })}
+          <motion.div
+          initial={{ opacity: 0, y: 80 }}
+          whileInView={{ opacity: 1, y: 30 }}
+          viewport={{ once: false }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-20"
+        >
+          <p className=" text-gray-400 mb-4">
+            Máte další otázky? Rádi vám odpovíme!
+          </p>
+          <div className="hidden md:block">
+          <button aria-label="Kontaktovat přes formulář" className="cursor-pointer px-6 py-2.5 rounded-full bg-gradient-to-r from-[#0EC3BF] to-purple-600 text-white font-medium shadow-[0_0_30px_rgba(14,195,191,0.5)] hover:shadow-[0_0_50px_rgba(14,195,191,0.7)] transition-all duration-300">
+            Kontaktujte nás!
+          </button>
+        </div>
+        </motion.div>          
         </div>
       </div>
     </section>
