@@ -23,7 +23,9 @@ export default defineConfig([
       },
     },
     rules: {
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+      // `motion` se používá jen jako JSX namespace (<motion.div>), což tato
+      // konfigurace nedetekuje – proto ho vyjímáme, ať nezakrývá skutečné chyby.
+      'no-unused-vars': ['error', { varsIgnorePattern: '^([A-Z_]|motion$)' }],
     },
   },
 ])

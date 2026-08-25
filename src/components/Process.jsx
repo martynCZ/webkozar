@@ -30,8 +30,8 @@ const steps = [
 
 function Process() {
   return (
-    <section className="relative py-24 px-4">
-      <div className="max-w-[90%] md:max-w-[80%] mx-auto">
+    <section className="relative py-24 px-4" id="tvorba">
+      <div className="max-w-[95%] md:max-w-[80%] mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -76,7 +76,7 @@ function Process() {
                   transition={{ duration: 0.6, delay: index * 0.15 }}
                   className="relative"
                 >
-                  <div className="relative p-6 rounded-2xl bg-gradient-to-br from-white/8 via-white/4 to-transparent backdrop-blur-xl border border-white/15 shadow-[0_0_40px_rgba(14,195,191,0.15)] hover:shadow-[0_0_60px_rgba(14,195,191,0.3)] transition-all duration-500 group">
+                  <div className="relative p-8 rounded-3xl bg-gradient-to-br from-white/8 via-white/4 to-transparent backdrop-blur-xl border border-white/15 shadow-[0_0_40px_rgba(14,195,191,0.15)] hover:shadow-[0_0_60px_rgba(14,195,191,0.3)] transition-all duration-500 group">
                     <div 
                       className="absolute -top-4 -right-4 w-12 h-12 rounded-full bg-gradient-to-br from-[#0EC3BF] to-purple-600 flex items-center justify-center text-white font-bold shadow-[0_0_30px_rgba(14,195,191,0.6)]"
                       style={{ fontFamily: 'Space Grotesk, sans-serif' }}

@@ -5,7 +5,7 @@ import { useState } from 'react';
 const projects = [
   {
     title: 'Okna Jančálek',
-    category: 'Katalog',
+    category: 'Katalog, logo',
     description: 'Minimalistický katalog kvalitních oken s důrazem na moderní architekturu',
     image: '/reference/oknajancalek.webp',
     link:'https://oknajancalek.cz/'
@@ -22,7 +22,7 @@ const projects = [
     category: 'Webová stránka',
     description: 'Profesionální firemní prezentace české poradenské společnosti v oblasti bezpečnosti.',
     image: '/reference/fsc.webp',
-    link:'https://fsc.cz/'
+    link:'https://fsc-ov.cz/'
   },
   {
     title: 'BMX Třinec',
@@ -44,15 +44,57 @@ const projects = [
     description: 'Vizitka výrobce laboratorního skla s důrazem na moderní design a přehlednost',
     image: '/reference/baspyr.webp',
     link:'https://baspyrglass.cz/'
-  }
+  },
 ];
 const MoreProjects = [
   {
     title: 'Hladké Životice',
     category: 'Webová stránka',
     description: 'Obecní web s důrazem na přehlednost a snadnou orientaci pro občany i návštěvníky.',
-    image: '/reference/baspyr.webp',
-    link:'https://www.zshlzivotice.cz/'
+    image: '/reference/zivotice.webp',
+    link:'https://www.hladkezivotice.cz/'
+  },
+  {
+    title: 'Autodoprava Jančálek',
+    category: 'Webová stránka, logo',
+    description: 'Moderní firemní web autodopravy s čistým designem, novým logem a přehlednou nabídkou služeb.',
+    image: '/reference/jancalek.webp',
+    link:'https://jancalek.net/'
+  },
+  {
+    title: 'HOLF centrum',
+    category: 'Webová stránka',
+    description: 'Přehledná prezentace dodavatele pracovních oděvů a OOPP s důrazem na sortiment a osobní přístup.',
+    image: '/reference/holfcentrum.webp',
+    link:'https://holfcentrum.cz/'
+  },
+  {
+    title: 'Dopravní koridor Poodří',
+    category: 'Webová stránka, logo',
+    description: 'Web spolku obcí i s novým logem, srozumitelně informující o dopravních stavbách v regionu.',
+    image: '/reference/dpk.webp',
+    link:'https://dopravnikoridorpoodri.cz/'
+  },
+  {
+    title: 'KADOS',
+    category: 'Webová stránka',
+    description: 'Firemní web dodavatele stavebních materiálů a CNC obrábění s jasně členěnou nabídkou služeb.',
+    image: '/reference/kados.webp',
+    link:'https://kados.cz/'
+  },
+  {
+    title: 'Tonysound',
+    category: 'Webová stránka',
+    description: 'Výrazná prezentace ozvučení a osvětlení akcí, laděná do atmosféry živé hudby.',
+    image: '/reference/tonysound.webp',
+    link:'https://tonysound.cz/'
+  },
+  {
+    title: 'Zemspol Studénka',
+    category: 'Webová stránka',
+    description: 'Moderní web zemědělské společnosti představující rostlinnou i živočišnou výrobu a bioplynové stanice.',
+    image: '/reference/zemspol.webp',
+    link:'https://zemspol-studenka.cz/'
   }
 ];
 const showReference = (projekty) =>{
@@ -65,12 +107,16 @@ const showReference = (projekty) =>{
               transition={{ duration: 0.6, delay: index * 0.1 }}
               className="group relative"
             >
-              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-white/10 via-white/5 to-transparent backdrop-blur-xl border border-white/20 shadow-[0_0_40px_rgba(14,195,191,0.15)] hover:shadow-[0_0_60px_rgba(14,195,191,0.35)] transition-all duration-500">
+              <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white/10 via-white/5 to-transparent backdrop-blur-xl border border-white/20 shadow-[0_0_40px_rgba(14,195,191,0.15)] hover:shadow-[0_0_60px_rgba(14,195,191,0.35)] transition-all duration-500">
                 {/* Image Container */}
                 <div className="relative aspect-[4/3] overflow-hidden">
-                  <img 
-                    src={project.image} 
+                  <img
+                    src={project.image}
                     alt={`Tvorba webových stránek pro ${project.title}`}
+                    width="800"
+                    height="600"
+                    loading={index === 0 ? 'eager' : 'lazy'}
+                    decoding="async"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0a0118] via-[#0a0118]/50 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
@@ -84,7 +130,7 @@ const showReference = (projekty) =>{
                     </a>
                   </div>
                 </div>
-                <div className="p-6">
+                <div className="p-8">
                   <div className="inline-block mb-3 px-3 py-1 rounded-full bg-[#0EC3BF]/20 border border-[#0EC3BF]/30 text-[#0EC3BF] text-xs font-medium">
                     {project.category}
                   </div>
@@ -110,8 +156,8 @@ const showReference = (projekty) =>{
 export function Reference() {
   const [moreProjects, showMoreProjects] = useState(false);
   return (
-    <section id="portfolio" className="relative py-24 px-4">
-      <div className="max-w-[90%] md:max-w-[80%] mx-auto">
+    <section id="reference" className="relative pt-24 px-4">
+      <div className="max-w-[95%] md:max-w-[80%] mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}

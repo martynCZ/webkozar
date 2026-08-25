@@ -4,8 +4,8 @@ import FluidBlob from './FluidBlob';
 
 function Hero() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center px-4 pt-32 pb-20">
-      <div className="max-w-[90%] md:max-w-[80%] w-full mx-auto grid lg:grid-cols-2 items-center gap-12">
+    <section className="relative min-h-[100dvh] flex items-center justify-center px-4 pt-32 pb-20">
+      <div className="max-w-[95%] md:max-w-[80%] w-full mx-auto grid lg:grid-cols-2 items-center gap-12">
         <motion.div
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
@@ -52,27 +52,29 @@ function Hero() {
             Specializujeme se na tvorbu moderních webů, které vás odliší od konkurence. Spojujeme špičkový webdesign se silnou SEO optimalizací, aby vás zákazníci v regionu snadno našli.          </p>
           
           <div className="flex flex-col sm:flex-row gap-4 items-center justify-center lg:justify-start">
-            <motion.button
-              aria-label="Přejít na kontaktní formulář pro získání webu"
+            <motion.a
+              href="#cenik"
+              aria-label="Přejít na ceník pro získání webu"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="group px-8 py-4 rounded-full bg-gradient-to-r from-[#0EC3BF] to-purple-600 text-white font-semibold shadow-[0_0_40px_rgba(14,195,191,0.6)] hover:shadow-[0_0_60px_rgba(14,195,191,0.8)] transition-all duration-300 flex items-center gap-2"
               style={{ fontFamily: 'Outfit, sans-serif' }}
             >
-              <span className='!bg-[rgba(0,0,0,0)]'>Získejte svůj web</span>
+              Získejte svůj web
               <ArrowRight aria-hidden="true" className="!bg-[rgba(0,0,0,0)] w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </motion.button>
+            </motion.a>
 
             {/* Secondary Frosted Glass Button */}
-            <motion.button
+            <motion.a
+              href="#reference"
               aria-label="Zobrazit naše projekty"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="px-8 py-4 rounded-full bg-white/5 backdrop-blur-xl border border-white/20 text-white font-semibold hover:bg-white/10 hover:border-[#0EC3BF]/50 transition-all duration-300"
+              className="inline-block px-8 py-4 rounded-full bg-white/5 backdrop-blur-xl border border-white/20 text-white font-semibold hover:bg-white/10 hover:border-[#0EC3BF]/50 transition-all duration-300"
               style={{ fontFamily: 'Outfit, sans-serif' }}
             >
               Podívejte se na naše projekty
-            </motion.button>
+            </motion.a>
           </div>
 
           {/* Statistiky */}

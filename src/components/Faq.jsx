@@ -4,8 +4,8 @@ import { ChevronDown } from 'lucide-react';
 
 const faqs = [
   {
-    question: 'Tvoříte weby jen pro klienty z Nového Jičína a Ostravy?',
-    answer: 'Ne, rozhodně ne! Ačkoliv máme sídlo v Hladkých Životicích u Nového Jičína a rádi spolupracujeme s klienty z Ostravy a celého Moravskoslezského kraje, naše služby nejsou geograficky omezené. Díky moderním technologiím a online komunikaci vytváříme webové stránky a aplikace pro klienty z celé České republiky i zahraničí. Vzdálenost není překážkou - důležitá je kvalita výsledku a vaše spokojenost.'
+    question: 'Kdo jsme a co děláme?',
+    answer: 'Jsme tým webových vývojářů, kteří se specializují na tvorbu moderních a funkčních webových stránek. Naše služby zahrnují kompletní proces od návrhu a vývoje až po SEO optimalizaci a správu webu včetně zajištění webhostingu. S důrazem na kvalitu, inovace a spokojenost zákazníků vytváříme weby, které pomáhají našim klientům vyniknout v online světě.'
   },
   {
     question: 'Jak dlouho trvá tvorba webových stránek?',
@@ -17,11 +17,11 @@ const faqs = [
   },
   {
     question: 'Kolik stojí vytvoření webových stránek?',
-    answer: 'Cena se odvíjí od typu a rozsahu projektu. Základní prezentační web začíná od 10 000 Kč, profesionální firemní web s vlastním designem od 15 000 Kč a komplexní weby na míru od 25 000 Kč. V ceně je vždy zahrnut responzivní design, základní SEO optimalizace a podpora. Rádi vám připravíme cenovou nabídku přesně na míru vašim potřebám.'
+    answer: 'Cena se odvíjí od typu a rozsahu projektu. Základní prezentační web začíná od 10 000 Kč, profesionální firemní web s vlastním designem od 15 000 Kč a komplexní weby na míru od 25 000 Kč. V ceně je vždy zahrnut responzivní design, základní SEO optimalizace, podpora a zajištění domény a webhostingu. Rádi vám připravíme cenovou nabídku přesně na míru vašim potřebám.'
   },
   {
     question: 'Poskytujete také správu a údržbu webu?',
-    answer: 'Ano! Nabízíme komplexní servis včetně technické podpory, aktualizace obsahu, pravidelných záloh, bezpečnostních aktualizací, monitoringu výkonu a SEO optimalizace. Můžete si vybrat z několika servisních balíčků podle vašich potřeb - od základní technické podpory až po kompletní správu webu s pravidelnými aktualizacemi.'
+    answer: 'Ano! Kromě webhostingu a správy domény nabízíme komplexní servis včetně technické podpory, aktualizace obsahu, pravidelných záloh, bezpečnostních aktualizací, monitoringu výkonu a SEO optimalizace. Můžete si vybrat z několika servisních balíčků podle vašich potřeb - od základní technické podpory až po kompletní správu webu s pravidelnými aktualizacemi.'
   },
   {
     question: 'Budou webové stránky optimalizované pro mobily?',
@@ -36,14 +36,14 @@ function Faq() {
   };
 
   return (
-    <section className="relative md:py-24 px-4 scroll-mt-8 min-h-screen" id="faq" >
-      <div className="max-w-[90%] md:max-w-[60%] mx-auto">
+    <section className="relative md:py-24 px-4 scroll-mt-8 min-h-screen" id="o-nas" >
+      <div className="max-w-[95%] md:max-w-[60%] mx-auto mt-24">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: false }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-20"
+          className="text-center mb-8"
         >
           <h2 
             className="text-4xl md:text-5xl font-bold text-white mb-4"
@@ -53,7 +53,7 @@ function Faq() {
             <motion.span 
               className="bg-gradient-to-r from-[#0EC3BF] via-purple-500 to-[#0EC3BF] bg-[length:200%_auto] bg-clip-text text-transparent"
               animate={{ backgroundPosition: ["0% center", "-200% center"] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
             >
               dotazy
             </motion.span>
@@ -72,9 +72,9 @@ function Faq() {
                 key={index} 
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className={`overflow-hidden rounded-2xl border transition-all duration-500 ${
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.05 }}
+                className={`overflow-hidden rounded-3xl border transition-all duration-500 ${
                   isOpen 
                     ? 'bg-gradient-to-br from-white/10 via-white/5 to-transparent border-[#0EC3BF]/40 shadow-[0_0_30px_rgba(14,195,191,0.1)]' 
                     : 'bg-white/5 border-white/10 hover:border-white/20'
@@ -82,7 +82,7 @@ function Faq() {
               >
                 <button
                   onClick={() => toggleAccordion(index)}
-                  className="w-full p-6 py-7 flex justify-between items-center text-left cursor-pointer group"
+                  className="w-full p-8 py-7 flex justify-between items-center text-left cursor-pointer group"
                   aria-expanded={isOpen}
                   aria-controls={`faq-answer-${index}`}
                 >
@@ -136,10 +136,16 @@ function Faq() {
           <p className=" text-gray-400 mb-4">
             Máte další otázky? Rádi vám odpovíme!
           </p>
-          <div className="hidden md:block">
-          <button aria-label="Kontaktovat přes formulář" className="cursor-pointer px-6 py-2.5 rounded-full bg-gradient-to-r from-[#0EC3BF] to-purple-600 text-white font-medium shadow-[0_0_30px_rgba(14,195,191,0.5)] hover:shadow-[0_0_50px_rgba(14,195,191,0.7)] transition-all duration-300">
-            Kontaktujte nás!
-          </button>
+          <div className="">
+           <motion.a
+              href="#cenik"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="group inline-block cursor-pointer text-center px-8 py-4 rounded-full bg-gradient-to-r from-[#0EC3BF] to-purple-600 text-white font-semibold shadow-[0_0_40px_rgba(14,195,191,0.6)] hover:shadow-[0_0_60px_rgba(14,195,191,0.8)] transition-all duration-300"
+              style={{ fontFamily: 'Outfit, sans-serif' }}
+              >
+              Vybrat balíček
+            </motion.a>
         </div>
         </motion.div>          
         </div>
