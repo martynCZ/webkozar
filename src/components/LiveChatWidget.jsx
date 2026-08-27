@@ -46,7 +46,7 @@ function LiveChatWidget() {
     setIsTyping(true);
 
     try {
-      const response = await fetch('https://new.webkozar.cz/ai-api.php', {
+      const response = await fetch('/ai-api.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         // PŘIDÁN PARAMETR type: "chat"

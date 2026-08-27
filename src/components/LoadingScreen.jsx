@@ -1,11 +1,21 @@
-import { motion } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
 import { useEffect } from 'react';
 
 export function LoadingScreen({ onComplete }) {
+  const reduceMotion = useReducedMotion();
+
   useEffect(() => {
-  document.body.style.overflow = 'hidden';
-  return () => document.body.style.overflow = '';
-}, []);
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = ''; };
+  }, []);
+
+  // Pojistka: v neaktivní záložce prohlížeč pozastaví animace, takže
+  // onAnimationComplete nemusí nikdy proběhnout a návštěvník by zůstal
+  // na prázdné obrazovce. Timeout zajistí, že se loader vždy schová.
+  useEffect(() => {
+    const t = setTimeout(() => onComplete?.(), reduceMotion ? 300 : 1400);
+    return () => clearTimeout(t);
+  }, [onComplete, reduceMotion]);
   return (
     <motion.div
       className="fixed inset-0 z-[1000] flex flex-col items-center justify-center bg-[#050117]"
@@ -13,7 +23,7 @@ export function LoadingScreen({ onComplete }) {
       aria-label="Načítání stránky"
       initial={{ opacity: 1 }}
       exit={{ opacity: 0, y: -20, filter: "blur(10px)" }} // Animace zmizení
-      transition={{ duration: 0.8, ease: "easeInOut" }}
+      transition={{ duration: reduceMotion ? 0 : 0.8, ease: "easeInOut" }}
     >
       <div className="relative flex items-center justify-center w-32 h-32 mb-8">
         <motion.div
@@ -44,12 +54,12 @@ export function LoadingScreen({ onComplete }) {
         </motion.div>
       </div>
       <div className="w-64 h-1 bg-white/10 rounded-full overflow-hidden">
-        <motion.div 
+        <motion.div
           className="h-full bg-gradient-to-r from-[#0EC3BF] to-[#A855F7] shadow-[0_0_10px_rgba(14,195,191,0.8)]"
           initial={{ width: "0%" }}
           animate={{ width: "100%" }}
-          transition={{ duration: 2.5, ease: "easeInOut" }}
-          onAnimationComplete={onComplete} 
+          transition={{ duration: reduceMotion ? 0.2 : 0.8, ease: "easeInOut" }}
+          onAnimationComplete={onComplete}
         />
       </div>
     </motion.div>

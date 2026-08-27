@@ -17,8 +17,7 @@ function AIChatbot({ isOpen, onClose }) {
     setError(null);
 
     try {
-      // 1. Změň na svou skutečnou doménu
-      const response = await fetch('https://new.webkozar.cz/ai-api.php', {
+      const response = await fetch('/ai-api.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         // 2. Tady je ten zásadní rozdíl - posíláme type: 'wizard'
@@ -28,7 +27,6 @@ function AIChatbot({ isOpen, onClose }) {
       if (!response.ok) throw new Error('Chyba komunikace se serverem.');
 
       const data = await response.json();
-      console.log("Co přišlo z PHP:", data);
       if (data.error) {
         throw new Error(data.error);
       }

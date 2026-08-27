@@ -1,6 +1,25 @@
 @import "tailwindcss";
-@import "@fontsource/space-grotesk";
-@import "@fontsource/outfit";
+
+/* Fonty: jen potřebné váhy (400/500/600/700) a subsety latin + latin-ext.
+   Kód používá font-medium/semibold/bold – bez těžších vah je prohlížeč
+   dopočítával (faux bold). Vietnamese subset pro český web nepotřebujeme. */
+@import "@fontsource/space-grotesk/latin-400.css";
+@import "@fontsource/space-grotesk/latin-ext-400.css";
+@import "@fontsource/space-grotesk/latin-500.css";
+@import "@fontsource/space-grotesk/latin-ext-500.css";
+@import "@fontsource/space-grotesk/latin-600.css";
+@import "@fontsource/space-grotesk/latin-ext-600.css";
+@import "@fontsource/space-grotesk/latin-700.css";
+@import "@fontsource/space-grotesk/latin-ext-700.css";
+
+@import "@fontsource/outfit/latin-400.css";
+@import "@fontsource/outfit/latin-ext-400.css";
+@import "@fontsource/outfit/latin-500.css";
+@import "@fontsource/outfit/latin-ext-500.css";
+@import "@fontsource/outfit/latin-600.css";
+@import "@fontsource/outfit/latin-ext-600.css";
+@import "@fontsource/outfit/latin-700.css";
+@import "@fontsource/outfit/latin-ext-700.css";
 
 :root {
   --background: #050117;
@@ -13,4 +32,30 @@ body{
 h1, h2, h3, h4, h5, h6 {
   color: #fff;
   font-family: 'Space Grotesk', sans-serif;
+}
+
+/* Pomalý drift jedné vrstvy pozadí (jen md+, viz AnimatedBackground).
+   Animuje se transform → GPU, bez překreslení. */
+@keyframes wk-bg-drift {
+  0%,
+  100% { transform: translate3d(-2%, 1%, 0) scale(1.06); }
+  50%  { transform: translate3d(3%, -2%, 0) scale(1.13); }
+}
+.wk-bg-drift {
+  animation: wk-bg-drift 28s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Respekt k „omezit pohyb" na úrovni OS. Utlumí CSS animace (pulzující
+   pozadí, posun gradientů) i přechody; JS animace knihovny motion řeší
+   <MotionConfig reducedMotion="user"> v App.jsx. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
