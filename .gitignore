@@ -23,6 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 .env
-deploy.cjs
+.env.*
 # PHP konfigurace se skutečnými hesly a API klíči
 public/config.php

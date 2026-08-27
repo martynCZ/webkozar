@@ -1,5 +1,0 @@
-# STAGING (new.webkozar.cz) – zakazuje indexaci.
-# Při přechodu na ostrou doménu tento soubor NENASAZUJ,
-# nasaď robots.txt (povoluje indexaci).
-User-agent: *
-Disallow: /
