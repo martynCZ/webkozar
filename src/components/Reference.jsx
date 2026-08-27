@@ -32,12 +32,21 @@ const projects = [
     link:'https://bmxtrinec.cz/'
   },
   {
+    title: 'Internova Nový Jičín',
+    category: 'Webová stránka',
+    description: 'Firemní web novojičínské společnosti s přehlednou prezentací nabídky a služeb.',
+    image: '/reference/internova.webp',
+    link:'https://internovanj.webkozar.cz/'
+  },
+  {
     title: 'TJ Niva Hladké Životice',
     category: 'Webová stránka',
     description: 'Oficiální stránky sportovního klubu s aktualitami, výsledky a fotogalerií',
     image: '/reference/niva.webp',
     link:'https://tjniva.cz/'
   },
+];
+const MoreProjects = [
   {
     title: 'Baspyr Glass',
     category: 'Webová stránka',
@@ -45,8 +54,6 @@ const projects = [
     image: '/reference/baspyr.webp',
     link:'https://baspyrglass.cz/'
   },
-];
-const MoreProjects = [
   {
     title: 'Hladké Životice',
     category: 'Webová stránka',
@@ -134,11 +141,19 @@ const showReference = (projekty) =>{
                   <div className="inline-block mb-3 px-3 py-1 rounded-full bg-[#0EC3BF]/20 border border-[#0EC3BF]/30 text-[#0EC3BF] text-xs font-medium">
                     {project.category}
                   </div>
-                  <h3 
+                  <h3
                     className="text-xl font-bold text-white mb-2"
                     style={{ fontFamily: 'Space Grotesk, sans-serif' }}
                   >
-                    {project.title}
+                    <a
+                      href={project.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 hover:text-[#0EC3BF] transition-colors"
+                    >
+                      {project.title}
+                      <ExternalLink aria-hidden="true" className="w-4 h-4 opacity-0 group-hover:opacity-70 transition-opacity" />
+                    </a>
                   </h3>
                   <p 
                     className="text-gray-400 text-sm"
@@ -156,7 +171,7 @@ const showReference = (projekty) =>{
 export function Reference() {
   const [moreProjects, showMoreProjects] = useState(false);
   return (
-    <section id="reference" className="relative pt-24 px-4">
+    <section id="reference" className="relative py-16 md:py-24 px-4 scroll-mt-24">
       <div className="max-w-[95%] md:max-w-[80%] mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}

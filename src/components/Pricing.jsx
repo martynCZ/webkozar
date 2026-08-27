@@ -1,17 +1,28 @@
 import { motion } from 'motion/react';
 import { Check } from 'lucide-react';
-import { useState } from 'react';
-import AIChatbot from './AIChatbot';
+import { useState, lazy, Suspense } from 'react';
+import CtaButton from './CtaButton';
 import { selectPackageAndScroll } from '../lib/selectPackage';
+
+// AI chatbot se načte až po prvním otevření (samostatný chunk).
+const AIChatbot = lazy(() => import('./AIChatbot'));
+
 function Pricing() {
   const [isAiOpen, setIsAiOpen] = useState(false);
+  const [aiEverOpened, setAiEverOpened] = useState(false);
+
+  const openAi = () => {
+    setAiEverOpened(true);
+    setIsAiOpen(true);
+  };
+
   return (
-    <section className="relative md:py-24 px-4 scroll-mt-8 min-h-screen" id="cenik" >
+    <section className="relative py-16 md:py-24 px-4 scroll-mt-24" id="cenik" >
       <div className="max-w-[95%] md:max-w-[80%] mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false}}
+          viewport={{ once: true }}
           transition={{ duration: 0.8 }}
           className="text-center mb-20"
         >
@@ -43,13 +54,13 @@ function Pricing() {
             <motion.div
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false }}
+                viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
                 className="relative"
                 >
-                    <div className="relative bottom-0 hover:bottom-[2%] p-8 rounded-3xl bg-gradient-to-br from-white/8 via-white/4 to-transparent backdrop-blur-xl border border-white/15 shadow-[0_0_40px_rgba(14,195,191,0.15)] hover:shadow-[0_0_100px_rgba(14,195,191,0.5)] hover:transition-all duration-900 group">
-                    <h3 
-                      className="text-2xl font-bold text-white mb-4"              
+                    <div className="relative p-8 rounded-3xl bg-gradient-to-br from-white/8 via-white/4 to-transparent backdrop-blur-xl border border-white/15 shadow-[0_0_40px_rgba(14,195,191,0.15)] hover:shadow-[0_0_100px_rgba(14,195,191,0.5)] hover:-translate-y-2 transition-all duration-500 group">
+                    <h3
+                      className="text-2xl font-bold text-white mb-4"
                     >
                       Základní web
                     </h3>
@@ -103,26 +114,24 @@ function Pricing() {
                             <span>Generování obrázků</span>
                         </li>
                     </ul>
-                    <motion.button
+                    <button
                         onClick={() => selectPackageAndScroll('zakladni')}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
                         className="px-8 py-4 w-full cursor-pointer rounded-full bg-white/5 backdrop-blur-xl border border-white/20 text-white font-semibold hover:bg-white/10 hover:border-[#0EC3BF]/50 transition-all duration-300"
                         style={{ fontFamily: 'Outfit, sans-serif' }}
                         >
                         Vybrat balíček
-                    </motion.button>
+                    </button>
                   </div>
             </motion.div>
 
             <motion.div
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false }}
+                viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
                 className="relative"
                 >
-                    <div className="relative md:bottom-[5%] hover:bottom-[7%] p-8 rounded-3xl bg-gradient-to-br from-white/8 via-white/4 to-transparent backdrop-blur-xl border border-[#0EC3BF]/70 shadow-[0_0_80px_rgba(14,195,191,0.4)] hover:shadow-[0_0_100px_rgba(14,195,191,0.5)] hover:transition-all duration-900 group">
+                    <div className="relative md:-translate-y-4 hover:-translate-y-2 md:hover:-translate-y-6 p-8 rounded-3xl bg-gradient-to-br from-white/8 via-white/4 to-transparent backdrop-blur-xl border border-[#0EC3BF]/70 shadow-[0_0_80px_rgba(14,195,191,0.4)] hover:shadow-[0_0_100px_rgba(14,195,191,0.5)] transition-all duration-500 group">
                     <h3 
                       className="text-2xl font-bold text-white mb-4"              
                     >
@@ -190,15 +199,12 @@ function Pricing() {
                             <span>Optimalizace rychlosti</span>
                         </li>         
                     </ul>
-                    <motion.button
+                    <CtaButton
                         onClick={() => selectPackageAndScroll('standard')}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="group w-full cursor-pointer text-center px-8 py-4 rounded-full bg-gradient-to-r from-[#0EC3BF] to-purple-600 text-white font-semibold shadow-[0_0_40px_rgba(14,195,191,0.6)] hover:shadow-[0_0_60px_rgba(14,195,191,0.8)] transition-all duration-300"
-                        style={{ fontFamily: 'Outfit, sans-serif' }}
+                        className="w-full"
                         >
-                        <span className='!bg-[rgba(0,0,0,0)]'>Vybrat balíček</span>
-                        </motion.button>
+                        Vybrat balíček
+                        </CtaButton>
                   </div>
             </motion.div>
             
@@ -206,13 +212,13 @@ function Pricing() {
             <motion.div
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false }}
+                viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
                 className="relative"
                 >
-                    <div className="relative bottom-0 hover:bottom-[2%] p-8 rounded-3xl bg-gradient-to-br from-white/8 via-white/4 to-transparent backdrop-blur-xl border border-white/15 shadow-[0_0_40px_rgba(14,195,191,0.15)] hover:shadow-[0_0_100px_rgba(14,195,191,0.5)] hover: transition-all duration-900 group">
-                    <h3 
-                      className="text-2xl font-bold text-white mb-4"              
+                    <div className="relative p-8 rounded-3xl bg-gradient-to-br from-white/8 via-white/4 to-transparent backdrop-blur-xl border border-white/15 shadow-[0_0_40px_rgba(14,195,191,0.15)] hover:shadow-[0_0_100px_rgba(14,195,191,0.5)] hover:-translate-y-2 transition-all duration-500 group">
+                    <h3
+                      className="text-2xl font-bold text-white mb-4"
                     >
                       Web na míru
                     </h3>
@@ -266,15 +272,13 @@ function Pricing() {
                             <span>Komplexní SEO</span>
                         </li>
                     </ul>
-                    <motion.button
+                    <button
                         onClick={() => selectPackageAndScroll('na-miru')}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
                         className="px-8 py-4 w-full cursor-pointer rounded-full bg-white/5 backdrop-blur-xl border border-white/20 text-white font-semibold hover:bg-white/10 hover:border-[#0EC3BF]/50 transition-all duration-300"
                         style={{ fontFamily: 'Outfit, sans-serif' }}
                         >
                         Vybrat balíček
-                    </motion.button>
+                    </button>
                   </div>
             </motion.div>
             
@@ -283,11 +287,11 @@ function Pricing() {
         </div>
       </div>
        <motion.div
-          initial={{ opacity: 0, y: 80 }}
-          whileInView={{ opacity: 1, y: 30 }}
-          viewport={{ once: false }}
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-48"
+          className="text-center mt-20"
         >
           <h4 className="text-3xl font-bold text-white mb-4" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
             Nevíte si rady s výběrem?
@@ -296,18 +300,16 @@ function Pricing() {
             Využijte našeho AI chatbota, který vám pomůže najít ten pravý balíček pro vaše potřeby!
           </p>
           <div className="">
-           <motion.button
-              onClick={() => setIsAiOpen(true)}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="group cursor-pointer text-center px-8 py-4 rounded-full bg-gradient-to-r from-[#0EC3BF] to-purple-600 text-white font-semibold shadow-[0_0_40px_rgba(14,195,191,0.6)] hover:shadow-[0_0_60px_rgba(14,195,191,0.8)] transition-all duration-300"
-              style={{ fontFamily: 'Outfit, sans-serif' }}
-              >
-              <span className='!bg-[rgba(0,0,0,0)]'>Otevřít chatbota</span>
-            </motion.button>
+           <CtaButton onClick={openAi}>
+              Otevřít chatbota
+            </CtaButton>
           </div>
         </motion.div>
-        <AIChatbot isOpen={isAiOpen} onClose={() => setIsAiOpen(false)} />
+        {aiEverOpened && (
+          <Suspense fallback={null}>
+            <AIChatbot isOpen={isAiOpen} onClose={() => setIsAiOpen(false)} />
+          </Suspense>
+        )}
     </section>
   )
 }

@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import { ArrowUpRight, Mail, MapPin, Terminal, Github, Linkedin } from 'lucide-react';
 import { NAV_LINKS as navLinks } from '../lib/navLinks';
+import { openCookieSettings, openCookiePolicy } from '../lib/cookieConsent';
 
 function Footer() {
   const currentYear = new Date().getFullYear();
@@ -86,20 +87,22 @@ function Footer() {
               whileHover={{ y: -5 }}
               className="p-6 rounded-3xl bg-gradient-to-br from-white/5 to-transparent border border-white/10 backdrop-blur-md relative overflow-hidden group"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-[#0EC3BF]/20 to-purple-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <Terminal className="w-8 h-8 text-white/50 mb-4" />
-              <h4 className="text-xl font-bold text-white mb-2" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>Máte projekt?</h4>
-              <p className="text-gray-400 text-sm mb-6" style={{ fontFamily: 'Outfit, sans-serif' }}>
-                Pojďme ho společně nakódovat k dokonalosti.
-              </p>
-              <a 
-                href="#kontakt" 
-                className="inline-flex items-center justify-between w-full px-4 py-3 rounded-full bg-white text-[#050117] font-bold hover:bg-[#0EC3BF] transition-colors"
-                style={{ fontFamily: 'Space Grotesk, sans-serif' }}
-              >
-                Začít spolupráci
-                <ArrowUpRight className="w-5 h-5" />
-              </a>
+              <div className="absolute inset-0 bg-gradient-to-br from-[#0EC3BF]/20 to-purple-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+              <div className="relative z-10">
+                <Terminal className="w-8 h-8 text-white/50 mb-4" />
+                <h4 className="text-xl font-bold text-white mb-2" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>Máte projekt?</h4>
+                <p className="text-gray-400 text-sm mb-6" style={{ fontFamily: 'Outfit, sans-serif' }}>
+                  Pojďme ho společně nakódovat k dokonalosti.
+                </p>
+                <a
+                  href="#kontakt"
+                  className="group/cta inline-flex items-center justify-between w-full px-5 py-3 rounded-full bg-white text-[#050117] font-bold transition-all duration-300 hover:bg-gradient-to-r hover:from-[#0EC3BF] hover:to-purple-600 hover:text-white hover:-translate-y-0.5 hover:shadow-[0_0_30px_rgba(14,195,191,0.5)]"
+                  style={{ fontFamily: 'Space Grotesk, sans-serif' }}
+                >
+                  Začít spolupráci
+                  <ArrowUpRight className="w-5 h-5 transition-transform duration-300 group-hover/cta:translate-x-0.5 group-hover/cta:-translate-y-0.5" />
+                </a>
+              </div>
             </motion.div>
           </div>
 
@@ -107,10 +110,30 @@ function Footer() {
 
         {/* Spodní lišta: Copyright & Socials */}
         <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-white/10 gap-4">
-          <p className="text-gray-500 text-sm text-center" style={{ fontFamily: 'Outfit, sans-serif' }}>
-            © {currentYear} <a href="https://webkozar.cz/" className="hover:text-[#0EC3BF] transition-colors">Tvorba webových stránek Nový Jičín.</a> Všechna práva vyhrazena.
-          </p>
-          
+          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
+            <p className="text-gray-500 text-sm text-center" style={{ fontFamily: 'Outfit, sans-serif' }}>
+              © {currentYear} <a href="https://webkozar.cz/" className="hover:text-[#0EC3BF] transition-colors">Tvorba webových stránek Nový Jičín.</a> Všechna práva vyhrazena.
+            </p>
+            <div className="flex items-center gap-4">
+              <button
+                type="button"
+                onClick={openCookiePolicy}
+                className="text-gray-500 text-sm hover:text-[#0EC3BF] transition-colors cursor-pointer"
+                style={{ fontFamily: 'Outfit, sans-serif' }}
+              >
+                Zásady cookies
+              </button>
+              <button
+                type="button"
+                onClick={openCookieSettings}
+                className="text-gray-500 text-sm hover:text-[#0EC3BF] transition-colors cursor-pointer"
+                style={{ fontFamily: 'Outfit, sans-serif' }}
+              >
+                Nastavení cookies
+              </button>
+            </div>
+          </div>
+
           <div className="flex items-center gap-4">
               <a 
                 href="https://github.com/webkozar" 
