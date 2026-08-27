@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 $config = require __DIR__ . '/config.php';
+require __DIR__ . '/_ratelimit.php';
 
 // --- CORS: pouze povolené domény ---
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
@@ -24,7 +25,28 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
     exit;
 }
 
+// --- Rate limiting: max 5 odeslání za hodinu z jedné IP ---
+if (!rate_limit_ok('send-email', 5, 3600)) {
+    http_response_code(429);
+    echo json_encode(['status' => 'error', 'message' => 'Příliš mnoho pokusů. Zkuste to prosím za chvíli.']);
+    exit;
+}
+
 $data = json_decode(file_get_contents('php://input'), true) ?: [];
+
+// --- Antispam: honeypot (skryté pole "website" člověk nevyplní) ---
+// A časový zámek – formulář odeslaný do 2,5 s po načtení je nejspíš bot.
+// Boti nedostanou chybu (aby si neladili obcházení), jen se nic neodešle.
+$honeypot   = trim((string)($data['website'] ?? ''));
+$renderedAt = (int)($data['renderedAt'] ?? 0);
+$tooFast    = $renderedAt > 0
+    && $renderedAt <= (int) (microtime(true) * 1000)
+    && ((int) (microtime(true) * 1000) - $renderedAt) < 2500;
+
+if ($honeypot !== '' || $tooFast) {
+    echo json_encode(['status' => 'success', 'message' => 'E-mail byl odeslán!']);
+    exit;
+}
 
 $name    = trim((string)($data['name'] ?? ''));
 $email   = trim((string)($data['email'] ?? ''));

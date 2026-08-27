@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 $config = require __DIR__ . '/config.php';
+require __DIR__ . '/_ratelimit.php';
 
 // --- CORS: pouze povolené domény ---
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
@@ -21,6 +22,14 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') {
 if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
     http_response_code(405);
     echo json_encode(["error" => "Nepovolená metoda."]);
+    exit;
+}
+
+// --- Rate limiting: CORS chrání jen prohlížeč, ne přímé volání přes curl. ---
+// Krátký burst limit (rychlé mačkání) + hodinový strop (ochrana nákladů OpenAI).
+if (!rate_limit_ok('ai-api-burst', 3, 20) || !rate_limit_ok('ai-api-hour', 15, 3600)) {
+    http_response_code(429);
+    echo json_encode(["error" => "Příliš mnoho dotazů. Zkuste to prosím za chvíli."]);
     exit;
 }
 
