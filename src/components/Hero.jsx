@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import FluidBlob from './FluidBlob';
+import CtaButton from './CtaButton';
 
 function Hero() {
   return (
@@ -23,8 +24,8 @@ function Hero() {
             <span>Tvorba webů • Loga • SEO optimalizace</span>
           </motion.div>
           
-          <h1 
-            className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight text-white"
+          <h1
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight text-white"
             style={{ fontFamily: 'Space Grotesk, sans-serif' }}
           >
             Tvorba{' '}
@@ -40,7 +41,7 @@ function Hero() {
               />
             </span>
             <br />
-            <span className="text-4xl md:text-5xl lg:text-6xl text-gray-200">
+            <span className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-gray-200">
               Nový Jičín & Ostrava
             </span>
           </h1>
@@ -52,29 +53,20 @@ function Hero() {
             Specializujeme se na tvorbu moderních webů, které vás odliší od konkurence. Spojujeme špičkový webdesign se silnou SEO optimalizací, aby vás zákazníci v regionu snadno našli.          </p>
           
           <div className="flex flex-col sm:flex-row gap-4 items-center justify-center lg:justify-start">
-            <motion.a
-              href="#cenik"
-              aria-label="Přejít na ceník pro získání webu"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="group px-8 py-4 rounded-full bg-gradient-to-r from-[#0EC3BF] to-purple-600 text-white font-semibold shadow-[0_0_40px_rgba(14,195,191,0.6)] hover:shadow-[0_0_60px_rgba(14,195,191,0.8)] transition-all duration-300 flex items-center gap-2"
-              style={{ fontFamily: 'Outfit, sans-serif' }}
-            >
+            <CtaButton href="#cenik" aria-label="Přejít na ceník pro získání webu">
               Získejte svůj web
-              <ArrowRight aria-hidden="true" className="!bg-[rgba(0,0,0,0)] w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </motion.a>
+              <ArrowRight aria-hidden="true" className="w-5 h-5 transition-transform group-hover/cta:translate-x-1" />
+            </CtaButton>
 
             {/* Secondary Frosted Glass Button */}
-            <motion.a
+            <a
               href="#reference"
               aria-label="Zobrazit naše projekty"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
               className="inline-block px-8 py-4 rounded-full bg-white/5 backdrop-blur-xl border border-white/20 text-white font-semibold hover:bg-white/10 hover:border-[#0EC3BF]/50 transition-all duration-300"
               style={{ fontFamily: 'Outfit, sans-serif' }}
             >
               Podívejte se na naše projekty
-            </motion.a>
+            </a>
           </div>
 
           {/* Statistiky */}

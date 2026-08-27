@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronDown } from 'lucide-react';
+import CtaButton from './CtaButton';
 
 const faqs = [
   {
@@ -36,12 +37,12 @@ function Faq() {
   };
 
   return (
-    <section className="relative md:py-24 px-4 scroll-mt-8 min-h-screen" id="o-nas" >
-      <div className="max-w-[95%] md:max-w-[60%] mx-auto mt-24">
+    <section className="relative py-16 md:py-24 px-4 scroll-mt-24" id="faq" >
+      <div className="max-w-[95%] md:max-w-[60%] mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false }}
+          viewport={{ once: true }}
           transition={{ duration: 0.8 }}
           className="text-center mb-8"
         >
@@ -86,8 +87,8 @@ function Faq() {
                   aria-expanded={isOpen}
                   aria-controls={`faq-answer-${index}`}
                 >
-                  <h3 
-                    className={`text-md md:text-xl font-bold pr-8 transition-colors duration-300 ${
+                  <h3
+                    className={`text-base md:text-xl font-bold pr-8 transition-colors duration-300 ${
                       isOpen ? 'text-[#0EC3BF]' : 'text-white group-hover:text-gray-200'
                     }`}                
                   >
@@ -127,25 +128,17 @@ function Faq() {
             );
           })}
           <motion.div
-          initial={{ opacity: 0, y: 80 }}
-          whileInView={{ opacity: 1, y: 30 }}
-          viewport={{ once: false }}
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-20"
+          className="text-center mt-16"
         >
-          <p className=" text-gray-400 mb-4">
+          <p className="text-gray-400 mb-4">
             Máte další otázky? Rádi vám odpovíme!
           </p>
           <div className="">
-           <motion.a
-              href="#cenik"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="group inline-block cursor-pointer text-center px-8 py-4 rounded-full bg-gradient-to-r from-[#0EC3BF] to-purple-600 text-white font-semibold shadow-[0_0_40px_rgba(14,195,191,0.6)] hover:shadow-[0_0_60px_rgba(14,195,191,0.8)] transition-all duration-300"
-              style={{ fontFamily: 'Outfit, sans-serif' }}
-              >
-              Vybrat balíček
-            </motion.a>
+            <CtaButton href="#cenik">Vybrat balíček</CtaButton>
         </div>
         </motion.div>          
         </div>

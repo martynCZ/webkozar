@@ -30,12 +30,12 @@ const steps = [
 
 function Process() {
   return (
-    <section className="relative py-24 px-4" id="tvorba">
+    <section className="relative py-16 md:py-24 px-4 scroll-mt-24" id="tvorba">
       <div className="max-w-[95%] md:max-w-[80%] mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false }}
+          viewport={{ once: true }}
           transition={{ duration: 0.8 }}
           className="text-center mb-20"
         >
@@ -72,7 +72,7 @@ function Process() {
                   key={step.title}
                   initial={{ opacity: 0, y: 50 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: false }}
+                  viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.15 }}
                   className="relative"
                 >

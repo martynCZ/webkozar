@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { PACKAGES } from '../lib/selectPackage';
 
-function CustomSelect({ value, onSelect }) {
+function CustomSelect({ value, onSelect, labelId }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const selected = PACKAGES.find((opt) => opt.value === value) || null;
@@ -12,6 +12,9 @@ function CustomSelect({ value, onSelect }) {
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
+        aria-labelledby={labelId}
+        aria-haspopup="listbox"
+        aria-expanded={isOpen}
         className="w-full px-4 py-3 rounded-2xl bg-white/5 border border-white/10 text-[#938D9C] flex justify-between items-center hover:bg-white/10 transition-all"
       >
         {selected ? selected.label : "Vyberte balíček"}

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Menu, X } from 'lucide-react';
 import { NAV_LINKS as navLinks } from '../lib/navLinks';
+import CtaButton from './CtaButton';
 
 function Header() {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -36,7 +37,7 @@ function Header() {
         transition={{ duration: 0.8, ease: "easeOut" }}
         className="fixed top-6 left-1/2 -translate-x-1/2 z-[60] w-[calc(100%-2rem)] max-w-5xl"
       >
-        <nav className="relative flex items-center justify-between px-8 py-4 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_0_40px_rgba(14,195,191,0.15)]">
+        <nav className="relative flex items-center justify-between px-4 sm:px-8 py-3 sm:py-4 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_0_40px_rgba(14,195,191,0.15)]">
           <div className="flex items-center gap-2 z-50">
             <img
               src="/logos/webkozar-logo-icon.svg"
@@ -75,9 +76,13 @@ function Header() {
           </div>
 
           <div className="hidden md:block z-50">
-            <a href="#kontakt" aria-label="Kontaktovat přes formulář" className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-gradient-to-r from-[#0EC3BF] to-purple-600 text-white font-medium shadow-[0_0_30px_rgba(14,195,191,0.5)] hover:shadow-[0_0_50px_rgba(14,195,191,0.7)] transition-all duration-300">
+            <CtaButton
+              href="#kontakt"
+              aria-label="Kontaktovat přes formulář"
+              className="px-6 py-2.5 font-medium shadow-[0_0_30px_rgba(14,195,191,0.5)] hover:shadow-[0_0_50px_rgba(14,195,191,0.7)]"
+            >
               Kontaktujte nás
-            </a>
+            </CtaButton>
           </div>
 
           <button 
@@ -142,14 +147,13 @@ function Header() {
               
               <div className="overflow-hidden mt-8 w-full max-w-xs">
                 <motion.div variants={linkVars}>
-                  <a
+                  <CtaButton
                     href="#kontakt"
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex justify-center w-full px-8 py-4 rounded-full bg-gradient-to-r from-[#0EC3BF] to-purple-600 text-white font-bold text-lg shadow-[0_0_40px_rgba(14,195,191,0.5)]"
-                    style={{ fontFamily: 'Outfit, sans-serif' }}
+                    className="w-full text-lg font-bold"
                   >
                     Kontaktujte nás
-                  </a>
+                  </CtaButton>
                 </motion.div>
               </div>
             </motion.div>
