@@ -32,28 +32,29 @@ a krátké „proč / jak". Body odškrtávej při dokončení, ať víme, kde j
   s `From: info@webkozar.cz` z cizího serveru často padá do spamu (SPF/DKIM
   nesedí). Přejít na autentizované SMTP (PHPMailer + schránka na hostingu),
   `From` nechat na reálné doméně odesílatele a `Reply-To` na zákazníka.
-- [x] **P1 — Deploy přes nešifrované FTP (port 21).** `deploy.cjs` + `.env`
-  smazány, `ftp-deploy`/`dotenv` odebrány z `package.json`. Nasazení nově
-  ručně přes SFTP/FTPS (řeší uživatel), viz `DEPLOY.md`.
+- [x] **P1 — Deploy přes nešifrované FTP (port 21).** Automatický deploy
+  vrácen, ale **přes SFTP** (šifrované, Svět hostingu port 24): `deploy/deploy.mjs`
+  (`ssh2-sftp-client`), `npm run deploy` = build + nahrání `dist/` do `/www`.
+  `config.php` se **nenahrává** (filter). Kredence v `deploy/.env` (gitignored,
+  vzor `deploy/.env.example`). Viz `DEPLOY.md`. Holé FTP se nevrací.
 - [ ] **P1 — GDPR souhlas ve formuláři.** Formulář zpracovává osobní údaje
   (jméno, e-mail), ale chybí zaškrtávací souhlas se zpracováním + odkaz na
   zásady. Přidat povinný checkbox „Souhlasím se zpracováním údajů pro účel
   vyřízení poptávky".
-- [ ] **P2 — `config.php` chránit i na úrovni serveru.** Pokud by se na hostingu
-  vyplo PHP, soubor by se servíroval jako text. Přidat `.htaccess`
-  (`<Files config.php> Require all denied </Files>`) nebo přesunout mimo
-  webroot a načítat přes `require '../config.php'`.
-- [ ] **P2 — Bezpečnostní hlavičky.** Přidat přes `.htaccess`:
-  `Strict-Transport-Security`, `X-Content-Type-Options: nosniff`,
-  `Referrer-Policy: strict-origin-when-cross-origin`, `X-Frame-Options: DENY`,
-  a základní `Content-Security-Policy`.
+- [x] **P2 — `config.php` chránit i na úrovni serveru.** `public/.htaccess`
+  (commit `38a4eb8`): `<FilesMatch "^(config\.php|config\.example\.php|_ratelimit\.php)$"> Require all denied`.
+- [x] **P2 — Bezpečnostní hlavičky.** `public/.htaccess` (commit `38a4eb8`):
+  `X-Content-Type-Options: nosniff`, `X-Frame-Options: SAMEORIGIN`,
+  `Referrer-Policy`, `Permissions-Policy`, `Cross-Origin-Opener-Policy`.
+  HSTS a CSP jsou připravené zakomentované (zapnout až po ověření HTTPS,
+  resp. otestování CSP).
 - [ ] **P2 — `new.webkozar.cz` / staging subdoména.** `robots.staging.txt` byl
   smazán. Zajistit, že subdoména buď neexistuje, nebo má `robots.txt`
   s `Disallow: /` + `X-Robots-Tag: noindex` — jinak duplicitní obsah.
   Pozn.: `internovanj.webkozar.cz` v referencích je taková subdoména —
   ověřit, že je `noindex`.
-- [ ] **P3 — `ai-api.php` tiše polyká chyby DB** (`catch(PDOException $e) {}`).
-  Alespoň `error_log()`, ať se dá dohledat výpadek logování.
+- [x] **P3 — `ai-api.php` tiše polyká chyby DB.** `catch(PDOException $e)` teď
+  volá `error_log()` s hláškou výjimky (odpověď uživateli to neshodí).
 
 ---
 
@@ -119,13 +120,11 @@ a krátké „proč / jak". Body odškrtávej při dokončení, ať víme, kde j
   webových stránek Nový Jičín/Ostrava" má rozsáhlé podstránky. Zvážit: sekci
   O nás, delší popisy služeb, případové studie u referencí, blog / rádce
   (i pár článků výrazně pomůže na long-tail dotazy).
-- [ ] **P2 — JSON-LD v `index.html` se ručně rozchází s obsahem.** FAQ schema
-  (6 otázek) a Offer schema (ceny) jsou napevno v `index.html` a duplikují
-  data z `Faq.jsx` / `Pricing.jsx`. Když se změní text nebo cena na webu,
-  strukturovaná data zůstanou stará → riziko „structured data mismatch"
-  v Search Console. Řešení: generovat JSON-LD z jednoho zdroje (např. sdílený
-  `src/lib/faqData.js` + build krok, nebo vložit `<script type="application/ld+json">`
-  z Reactu).
+- [x] **P2 — JSON-LD v `index.html` se ručně rozchází s obsahem.** Vyřešeno:
+  jediný zdroj `public/ai-knowledge.json` → `src/lib/knowledge.js` (`FAQ`,
+  `PACKAGES`). `Faq.jsx` generuje `FAQPage`, `Pricing.jsx` `OfferCatalog`
+  (`@id` odkaz z `#business` v `index.html`), oboje do HTML přes prerender.
+  Ceník i FAQ se teď udržují jen v `ai-knowledge.json`. Viz `AI-VYLEPSENI.md` bod 2.
 - [ ] **P2 — `ProfessionalService` schema doplnit.** Chybí `image`, `logo`,
   `sameAs` (GitHub/LinkedIn), `priceRange` (např. `"10000–50000 Kč"`),
   `geo` (souřadnice) a `aggregateRating`, pokud existují reálné recenze
@@ -150,46 +149,55 @@ a krátké „proč / jak". Body odškrtávej při dokončení, ať víme, kde j
 
 ## 4. Přístupnost (a11y)
 
-- [~] **P1 — `CustomSelect` není plně ovladatelný klávesnicí ani čtečkou.**
-  Hotovo zatím: `aria-labelledby` (napojení na popisek „Balíček"),
-  `aria-haspopup="listbox"`, `aria-expanded`. **Zbývá:** `role="listbox"`
-  / `role="option"` na položkách, ovládání šipkami, výběr Enterem, zavření
-  Esc — nebo rovnou nahradit stylovaným nativním `<select>`.
+- [x] **P1 — `CustomSelect` není plně ovladatelný klávesnicí ani čtečkou.**
+  Vlastní dropdown nahrazen stylovaným nativním `<select>` (`appearance-none`
+  + vlastní šipka, stylované `<option>`). Klávesnice, čtečka i mobilní UI
+  fungují zadarmo. Props API (`value`/`onSelect`/`labelId`) beze změny,
+  `Form.jsx` netknut. ~30 řádků vlastní logiky pryč.
 - [x] **P1 — Formulářové `<label>` nejsou spárované s inputy.** Přidány páry
   `id`/`htmlFor` (`form-name`, `form-email`, `form-message`); u výběru balíčku
   `aria-labelledby` na `#form-balicek-label`. Ověřeno v Chrome.
-- [ ] **P1 — `AIChatbot` a `LiveChatWidget` modaly bez a11y základů.**
-  Chybí `role="dialog"`, `aria-modal`, focus trap, zavření na Esc, návrat
-  fokusu na spouštěč po zavření. `CookiePolicy.jsx` to má vyřešené správně —
-  vzít jako vzor.
-- [ ] **P1 — Kontrast textu.** `text-gray-500` (#6b7280) na pozadí #050117 má
-  poměr ~3,4:1 → **propadá WCAG AA** pro běžný text (používá se v `Form.jsx`
-  u fakturačních údajů a v `Footer.jsx` u copyrightu/cookies odkazů).
-  `text-gray-400` je hraniční (~5,9:1, projde pro normální text, ne pro < 18px
-  bold). Zesvětlit sekundární text na min. `#9aa4b2` a drobný text ještě víc.
+- [x] **P1 — `AIChatbot` a `LiveChatWidget` modaly bez a11y základů.**
+  Nový `src/lib/useFocusTrap.js` (fokus dovnitř po otevření, Tab cyklí uvnitř,
+  návrat fokusu na spouštěč po zavření). `AIChatbot`: `role="dialog"` +
+  `aria-modal="true"` + `aria-labelledby`, Esc zavírá, focus trap, scroll-lock
+  hook. `LiveChatWidget` (plovoucí panel, ne blokující overlay): `role="dialog"`
+  + `aria-labelledby`, Esc zavírá, fokus jde do vstupu / zpět na plovoucí
+  tlačítko — **bez** `aria-modal`/scroll-locku/tvrdého trapu záměrně, protože
+  zbytek stránky zůstává funkční. Ověřeno v Chrome (oba se otevřou, Esc zavře).
+- [x] **P1 — Kontrast textu.** `text-gray-500` (~3,4:1) nahrazeno `text-gray-400`
+  (~5,9:1, projde WCAG AA pro běžný text) tam, kde nese informaci: `Footer.jsx`
+  (copyright + odkazy cookies), `Form.jsx` (fakturační údaje + „fyzická osoba…").
+  Dekorativní `text-[10px]` popisky (Connect, „Powered by") ponechány.
 - [x] **P1 — `prefers-reduced-motion` respektuje jen LoadingScreen.**
   Přidán globální CSS guard v `index.css` (`@media (prefers-reduced-motion:
   reduce)` — utlumí CSS animace i přechody) a `<MotionConfig reducedMotion="user">`
   v `App.jsx` (utlumí JS animace knihovny motion). LoadingScreen navíc zkracuje
   svoje časy při omezeném pohybu.
-- [ ] **P2 — Ikonová tlačítka bez názvu.** Plovoucí tlačítko chatu
-  (`LiveChatWidget`) nemá `aria-label`. Zavírací „X" v `AIChatbot` a
-  `LiveChatWidget` taky ne. Doplnit česky.
-- [ ] **P2 — `aria-label="Toggle mobile menu"` je anglicky** (`Header.jsx`),
-  na jinak českém webu. → `„Otevřít / zavřít menu"`.
-- [ ] **P2 — Chat nemá `aria-live`.** Nové zprávy bota čtečka neoznámí.
-  Kontejner zpráv v `LiveChatWidget` označit `aria-live="polite"`.
-- [ ] **P2 — Chybí „přeskočit na obsah".** Přidat skip-link jako první
-  fokusovatelný prvek (`<a href="#main" class="sr-only focus:not-sr-only">`).
-- [ ] **P2 — Viditelný fokus.** Vlastní tlačítka a odkazy (nav, CTA, karty)
-  nemají `focus-visible` styl. Přidat konzistentní `focus-visible:ring-2
-  ring-[#0EC3BF]` globálně.
+- [x] **P2 — Ikonová tlačítka bez názvu.** Plovoucí tlačítko chatu
+  (`LiveChatWidget`) dostalo `aria-label` + `aria-expanded` (dynamicky
+  „Otevřít / Zavřít chat"). Zavírací „X": `AIChatbot` → „Zavřít průvodce",
+  `LiveChatWidget` → „Zavřít chat".
+- [x] **P2 — `aria-label="Toggle mobile menu"` je anglicky** (`Header.jsx`).
+  Nově dynamicky „Otevřít menu" / „Zavřít menu" + `aria-expanded`.
+- [x] **P2 — Chat nemá `aria-live`.** Kontejner zpráv v `LiveChatWidget`
+  označen `aria-live="polite"` `aria-atomic="false"`.
+- [x] **P2 — Chybí „přeskočit na obsah".** Skip-link `#obsah` přidán jako
+  první fokusovatelný prvek v `App.jsx` (`sr-only focus:not-sr-only`),
+  všechny tři `<main>` (`Home`, `ConnectPage`, `ServiceLanding`) mají
+  `id="obsah"`.
+- [x] **P2 — Viditelný fokus.** Globální `:focus-visible` v `index.css`
+  (`outline: 2px solid #0EC3BF; outline-offset: 2px`). Platí na všechna
+  vlastní tlačítka a odkazy, jen při navigaci klávesnicí.
 - [x] **P2 — `text-md` není platná Tailwind třída** (`Faq.jsx`). Nahrazeno
   `text-base`.
-- [ ] **P3 — Hierarchie nadpisů.** `Footer` a „Nevíte si rady" v `Pricing`
-  používají `h4` bez předchozího `h3` v dané větvi (drobné). Sjednotit.
-- [ ] **P3 — Externí odkazy** (`target="_blank"`) nemají vizuální/aria
-  indikaci nového okna. Přidat `aria-label="… (otevře se v novém okně)"`.
+- [x] **P3 — Hierarchie nadpisů.** „Nevíte si rady" v `Pricing` `h4` → `h3`
+  (podsekce pod `h2` ceníku). `Footer` sloupcové nadpisy `h4` → `h2` (patička
+  je vlastní landmark, `h1` je Hero).
+- [x] **P3 — Externí odkazy** (`target="_blank"`) dostaly `aria-label`
+  s „(otevře se v novém okně)": GitHub + LinkedIn v `Footer.jsx` (navíc jim
+  chyběl přístupný název úplně) a oba odkazy na projekt v `Reference.jsx`
+  (dřív bezejmenné „Zobrazit projekt" pro každou kartu stejně).
 
 ---
 
@@ -230,26 +238,28 @@ a krátké „proč / jak". Body odškrtávej při dokončení, ať víme, kde j
 
 ## 6. UX a obsah
 
-- [ ] **P1 — Dva chatboti volající stejný endpoint.** `AIChatbot` (průvodce
-  v ceníku) i `LiveChatWidget` (plovoucí bublina) posílají na `/ai-api.php`.
-  Uživatele to mate a zdvojnásobuje to plochu pro zneužití API. Zvážit
-  sjednocení do jednoho widgetu s dvěma režimy.
-- [ ] **P1 — Falešný odznak „1" u chatu.** `LiveChatWidget` vždy po načtení
-  ukazuje červenou bublinu s „1" nepřečtenou zprávou. To je dark pattern —
-  odstranit, nebo navázat na reálný stav (např. první otevření).
+- [x] **P1 — Dva chatboti volající stejný endpoint.** `AIChatbot` (wizard
+  v ceníku) **zrušen**. Zůstává jen `LiveChatWidget`; tlačítko v ceníku ho
+  přes `openChat()` otevře s výzvou k popisu projektu. Funkci wizardu
+  (doporuč balíček + odhad ceny) pokrývá akce `odhad_ceny` → karta v chatu.
+  `ai-api.php` má jediný režim (bez `type`). Viz `AI-VYLEPSENI.md` bod 4.
+- [x] **P1 — Falešný odznak „1" u chatu.** Odznak teď znamená nepřečtenou
+  uvítací zprávu a zmizí po prvním otevření chatu (stav v `sessionStorage`
+  `wk-chat-opened`). Po prokliku webu v rámci relace se už neukazuje.
+  Označen `aria-hidden` (skutečnou zprávu oznámí `aria-live` kontejner).
 - [ ] **P2 — „Všechny systémy online" v patičce.** Status indikátor pro webové
   studio nic neříká a působí jako vata. Nahradit něčím konkrétním (počet
   projektů, roky na trhu) nebo odstranit.
-- [ ] **P2 — LiveChat je bezkontextový.** Přestože komentář mluví o „historii
-  konverzace", `ai-api.php` dostává vždy jen system prompt + poslední zprávu.
-  Bot si nepamatuje předchozí repliky. Buď posílat posledních N zpráv, nebo
-  z UI odstranit dojem plnohodnotné konverzace.
+- [x] **P2 — LiveChat je bezkontextový.** `LiveChatWidget` posílá `history`
+  (posledních 10 zpráv), `ai-api.php` je validuje a vkládá do `messages`.
+  Bot drží kontext. Viz `AI-VYLEPSENI.md` bod 1. Wizard zůstává jednorázový
+  záměrně.
 - [ ] **P2 — Neověřitelná čísla v Hero.** „40+ projektů, 30+ klientů,
   99% spokojenost" — pokud nejsou doložitelná, zvážit zmírnění nebo doplnění
   zdroje (odkaz na reference/recenze).
-- [ ] **P2 — `Form` — úspěšná hláška mizí po 3 s.** Uživatel ji může minout.
-  Nechat ji zobrazenou trvale (do dalšího odeslání) a přidat sekundární
-  potvrzení (např. „Kopii jsme poslali na váš e-mail", pokud se bude posílat).
+- [x] **P2 — `Form` — úspěšná hláška mizí po 3 s.** `setTimeout` odstraněn,
+  potvrzení zůstává zobrazené do dalšího odeslání. Blok má `role="status"`
+  (čtečka ho oznámí). Sekundární potvrzení e-mailem = až s SMTP (sekce 1 P1).
 - [ ] **P2 — GitHub odkaz v patičce** (`github.com/webkozar`) — ověřit, že
   účet existuje a má obsah; jinak 404 z patičky vypadá špatně. Případně
   odkaz odstranit.
@@ -265,39 +275,43 @@ a krátké „proč / jak". Body odškrtávej při dokončení, ať víme, kde j
 
 ## 7. Kód a údržba
 
-- [ ] **P1 — `body { overflow }` spravuje 4 komponenty naráz.** `Header`
-  (mobilní menu), `LoadingScreen`, `CookiePolicy`, a nepřímo další modaly
-  si každý sám přepínají `document.body.style.overflow`. Zavření jednoho
-  odemkne scroll, i když je jiný pořád otevřený. Zavést jeden sdílený
-  `useBodyScrollLock` hook s čítačem.
-- [ ] **P2 — `src/App.css` je prázdný a nikde se neimportuje.** Smazat.
-- [ ] **P2 — `Technologies.jsx` — `transform: translateZ(75px)`** bez
-  `perspective` a `transform-style: preserve-3d` na rodiči nedělá nic.
-  Pozůstatek po 3D experimentu — odstranit, nebo dodělat perspektivu.
+- [x] **P1 — `body { overflow }` spravuje 4 komponenty naráz.** Zaveden
+  `src/lib/useBodyScrollLock.js` — hook s čítačem: `overflow: hidden` se
+  nastaví při prvním zámku a vrátí zpět až po odemčení posledního.
+  `Header` (mobilní menu), `LoadingScreen` i `CookiePolicy` ho používají,
+  vlastní přepínání `document.body.style.overflow` odstraněno.
+- [x] **P2 — `src/App.css` je prázdný a nikde se neimportuje.** Smazán.
+- [x] **P2 — `Technologies.jsx` — `transform: translateZ(75px)`** bez
+  `perspective` na rodiči nic nedělal → odstraněn.
 - [ ] **P2 — `Reference.jsx` — `showReference` je funkce vracející JSX**
   se stray `{return ...}` blokem a proměnná `MoreProjects` je PascalCase,
   ač to není komponenta. Přepsat na komponentu `<ProjectGrid projects={...} />`.
-- [ ] **P2 — Chybí Error Boundary.** Jakákoli chyba v renderu shodí celou
-  stránku na bílo. Obalit `<App>` do error boundary s fallbackem.
-- [ ] **P2 — `Form.jsx` — stav `status`** míchá `''`, `'idle'`, `'sending'`,
-  `'success'`, `'error'`. Sjednotit na jednu sadu (`'idle' | 'sending' |
-  'success' | 'error'`) a inicializovat `'idle'`.
-- [ ] **P3 — ESLint neběží na PHP ani nekontroluje a11y.** Přidat
-  `eslint-plugin-jsx-a11y` — chytne většinu bodů ze sekce 4 automaticky.
+- [x] **P2 — Chybí Error Boundary.** Přidán `src/components/ErrorBoundary.jsx`
+  (class komponenta, SSR-safe). Obaluje `<App>` v `main.jsx` i
+  `entry-server.jsx`. Fallback: česká hláška „Něco se pokazilo" + „Načíst
+  znovu" + kontakt. Prerender ověřen (fallback se do HTML nedostal).
+- [x] **P2 — `Form.jsx` — stav `status`** sjednocen na `'idle' | 'sending' |
+  'success' | 'error'`, inicializace `'idle'`.
+- [x] **P3 — ESLint nekontroluje a11y.** Přidán `eslint-plugin-jsx-a11y`
+  (`flatConfigs.recommended`) do `eslint.config.js`. Dva zbylé nálezy
+  (klikací overlay v `CookiePolicy`, nedodělaný `CustomSelect`) jsou jako
+  `warn`, ať `npm run lint` neselže. PHP lint zůstává mimo (P3).
 - [x] **P3 — Duplicitní import fontu.** Vyřešeno se změnou fontů — importy
   jsou jen v `index.css`, z `main.jsx` odebrány.
-- [ ] **P3 — Nepoužité závislosti `clsx` a `tailwind-merge`** v `package.json`
-  (nikde se neimportují). Buď odebrat, nebo použít při dalším refaktoru tříd.
+- [x] **P3 — Nepoužité závislosti `clsx` a `tailwind-merge`** odebrány
+  z `package.json` (`npm uninstall`).
 
 ---
 
 ## 8. Backend (PHP)
 
-- [ ] **P1 — `ai-api.php` — validace odpovědi od OpenAI.** Když model vrátí
-  nevalidní JSON, `json_decode` dá `null` a do Reactu se pošle rozbitý string.
-  Ošetřit (`json_last_error()`), poslat čitelnou chybu.
-- [ ] **P2 — `ai-api.php` — model `gpt-4o-mini` napevno.** Vytáhnout do
-  `config.php`, ať jde měnit bez zásahu do kódu.
+- [x] **P1 — `ai-api.php` — validace odpovědi od OpenAI.** Po `json_decode`
+  se kontroluje `json_last_error()` + že je to pole + že obsahuje očekávaný
+  klíč (`doporuceni` / `reply`). Při chybě `error_log()` + čitelná česká
+  hláška do Reactu, ne rozbitý string.
+- [x] **P2 — `ai-api.php` — model `gpt-4o-mini` napevno.** Vytažen do
+  `config['openai_model']` (fallback `gpt-4o-mini`). `config.example.php`
+  doplněn. **Pozn.: doplň `'openai_model'` do ostrého `config.php` na serveru.**
 - [ ] **P2 — DB logování chatu** — ukládá se `user_message` + `ai_response`
   bez timestampu v kódu (spoléhá na default sloupce) a bez IP/session.
   Doplnit, ať jde dohledat zneužití. Zvážit retenci (mazat po X dnech kvůli
@@ -316,9 +330,12 @@ a krátké „proč / jak". Body odškrtávej při dokončení, ať víme, kde j
   build-time krok ve Vite.
 - [ ] **P1 — 301 přesměrování ze starých URL.** `.htaccess` s 301 z podstránek
   starého WordPressu na `/` nebo na kotvy. Bez toho ztráta SEO šťávy.
-- [ ] **P2 — Cache hlavičky.** `.htaccess` s `Cache-Control: max-age=31536000,
-  immutable` pro `/assets/*` (hashované názvy) a krátkou cache pro `index.html`.
-- [ ] **P2 — Gzip/Brotli** — ověřit, že hosting komprimuje `.js`/`.css`/`.svg`.
+- [x] **P2 — Cache hlavičky.** `public/.htaccess` (commit `38a4eb8`):
+  `js/mjs/css/woff2` → `max-age=31536000, immutable`; obrázky → týden;
+  `xml/txt` → den; `html` → `no-cache, must-revalidate`.
+- [x] **P2 — Gzip/Brotli.** `public/.htaccess` (commit `38a4eb8`):
+  `mod_deflate` na html/css/js/json/xml/svg. Brotli podle hostingu –
+  ověřit po nasazení přes `curl -I --compressed`.
 - [ ] **P3 — Search Console + Seznam Webmaster** — přidat web, odeslat
   sitemapu, ověřit rich results (DEPLOY.md už to má v postupu — odškrtnout
   po nasazení).

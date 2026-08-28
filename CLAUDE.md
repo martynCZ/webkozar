@@ -43,10 +43,14 @@ poznat:
 
 - **`src/lib/`** — sdílený kód bez UI:
   - `navLinks.js` — jediný zdroj položek navigace (používá `Header` i `Footer`).
-  - `selectPackage.js` — `PACKAGES` (id + label balíčků) a
-    `selectPackageAndScroll()`: přes `CustomEvent('prefillPackage')` předvyplní
-    balíček ve formuláři a odscrolluje na `#kontakt`. Posílá to `Pricing` i
-    `AIChatbot`, poslouchá `Form.jsx`.
+  - `knowledge.js` — importuje `public/ai-knowledge.json` do bundle a exportuje
+    `PACKAGES` + `FAQ`. Jediný zdroj obsahu ceníku a FAQ pro web; tentýž soubor
+    čte za běhu i `ai-api.php`.
+  - `selectPackage.js` — `selectPackageAndScroll()`: přes
+    `CustomEvent('prefillPackage')` předvyplní balíček ve formuláři a odscrolluje
+    na `#kontakt` (poslouchá `Form.jsx`). `PACKAGES` re-exportuje z `knowledge.js`.
+  - `openChat.js` — `openChat(botMessage?)`: přes `CustomEvent` otevře plovoucí
+    chat odkudkoli (používá `Pricing`, poslouchá `LiveChatWidget`).
   - `cookieConsent.js` — logika souhlasu (localStorage, verzování, Google
     Consent Mode v2). `openCookieSettings()` / `openCookiePolicy()` otevírají
     lištu/modal odkudkoli přes `CustomEvent`.
@@ -59,23 +63,31 @@ poznat:
 - **`src/components/AnimatedBackground.jsx`** — fixní gradientové pozadí
   s blur „bloby". Vizuálně nese celý web; jakákoli sekce má průhledné pozadí
   a spoléhá na tuhle vrstvu.
-- **Dva chat vstupy, jeden endpoint:** `AIChatbot.jsx` (průvodce v ceníku,
-  `type: 'wizard'`) a `LiveChatWidget.jsx` (plovoucí bublina, `type: 'chat'`)
-  volají oba `POST /ai-api.php`. Wizard čeká klíče `doporuceni/cena/balicek`,
-  chat klíč `reply`.
+- **`LiveChatWidget.jsx`** — jediný AI chat (plovoucí bublina), volá
+  `POST /ai-api.php`, čeká `{ reply, akce }`. `akce` (whitelistuje ji server)
+  řídí frontend: `predvypln_formular`, `prejdi_na`, `odhad_ceny` (karta
+  doporučeného balíčku + odhad ceny), `navrhnout_poptavku` (`LeadCard` s
+  potvrzením → `POST /send-email.php`). Ceníkový průvodce `AIChatbot.jsx` byl
+  zrušen (AUDIT §6 P1) — tlačítko v ceníku teď přes `openChat()` otevře tenhle
+  chat s předvyplněnou výzvou. Podrobně `AI-VYLEPSENI.md`.
 
 ### PHP backend (`public/`)
 
 - `send-email.php` — příjem kontaktního formuláře, validace, odeslání přes
   `mail()`. Antispam: honeypot pole `website` + časový zámek (`renderedAt`)
   + rate limit 5/hod přes `_ratelimit.php`.
-- `ai-api.php` — proxy na OpenAI (`gpt-4o-mini`), system prompt podle `type`,
-  logování do MySQL. Rate limit přes `_ratelimit.php` (burst 3/20 s + 15/hod).
+- `ai-api.php` — proxy na OpenAI (model z `config['openai_model']`),
+  `response_format: json_object`, system prompt ze `ai-knowledge.json`
+  (znalosti + tón + refusal + few-shot), historie konverzace, sanitace `akce`,
+  logování do MySQL. Rate limit přes `_ratelimit.php` (burst + hodinový strop,
+  hodnoty z `config['ai_rate_burst']` / `['ai_rate_hour']`, výchozí 5/20 s a 60/hod).
 - `_ratelimit.php` — `rate_limit_ok(bucket, maxHits, windowSeconds)`, stav
-  v `sys_get_temp_dir()`. Fail-open, když nejde zapisovat.
+  v `sys_get_temp_dir()`. Fail-open, když nejde zapisovat. `config['rate_limit_disabled']
+  => true` limity úplně vypne (jen pro ladění).
 - `config.php` — **skutečné klíče a hesla. NENÍ v gitu** (`.gitignore`),
-  na server se nahrává ručně. Vzor je `config.example.php`. Nikdy ho
-  necommituj ani neloguj jeho obsah; při nahrávání `dist/` ho vynech.
+  vzor je `config.example.php`. Nikdy ho necommituj ani neloguj jeho obsah.
+  Nahrává se ale na server přes SFTP se vším ostatním (přenos je šifrovaný) —
+  zdroj pravdy je lokální `public/config.php`, drž ho aktuální.
 
 ## Pravidla pro kódování
 
@@ -104,21 +116,24 @@ poznat:
 
 ## Známé pasti
 
-- **JSON-LD v `index.html` (FAQ + ceník) je napevno** a ručně duplikuje obsah
-  z `Faq.jsx` a `Pricing.jsx`. Když měníš otázky nebo ceny na webu, uprav
-  i strukturovaná data — jinak „structured data mismatch".
+- **JSON-LD ceníku i FAQ se generuje z `public/ai-knowledge.json`** (`Pricing.jsx`
+  `OfferCatalog`, `Faq.jsx` `FAQPage`, do HTML přes prerender). `index.html`
+  `#business` má jen odkaz `hasOfferCatalog: { "@id": "…/#offercatalog" }`. Ceník
+  a FAQ tedy uprav **jen v `ai-knowledge.json`** — web i strukturovaná data se
+  srovnají sama.
 - **`document.body.style.overflow` si přepíná víc komponent** (`Header`,
   `LoadingScreen`, `CookiePolicy`). Zavření jedné odemkne scroll i pod jinou
   otevřenou vrstvou. Než přidáš další modal, zvaž sdílený scroll-lock hook.
 - **`duration-900` není platná Tailwind třída** (platí 700 nebo 1000) a v kódu
   se ještě vyskytuje — tiše se ignoruje. Nepřidávej další, oprav při dotyku.
-- **`config.php` se nesmí dostat do gitu ani do buildu.** Vzor `config.example.php`
-  ano, ostrý `config.php` ne. Při ručním nahrávání `dist/` ho na serveru nepřepiš.
+- **`config.php` se nesmí dostat do gitu.** Vzor `config.example.php` ano, ostrý
+  `config.php` ne. Na server se ale nahrává (SFTP, šifrovaně) se vším ostatním —
+  `npm run deploy` ho posílá; drž lokální `public/config.php` aktuální.
 
 ## Nasazení
 
-Ruční, přes SFTP/FTPS — obsah `dist/` na webroot, `config.php` na serveru
-nepřepisovat. Podrobně v `DEPLOY.md`.
+`npm run deploy` (build + SFTP) nebo ručně — obsah `dist/` na webroot,
+včetně `config.php`. Podrobně v `DEPLOY.md`.
 
 Po přechodu na jinou URL strukturu: 301 redirecty ze starých URL, odeslat sitemapu
 do Search Console + Seznam Webmaster, ověřit rich results a náhled sdílení.
