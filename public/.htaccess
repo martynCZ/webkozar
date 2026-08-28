@@ -1,0 +1,133 @@
+# =============================================================================
+#  webkozar.cz — Apache konfigurace
+#  Nahrává se do webrootu společně s obsahem dist/ (viz DEPLOY.md).
+# =============================================================================
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # --- Kanonická adresa: www → bez www a http → https (jedním přesměrováním) --
+  # `.well-known` se vynechává, ať nespadne obnova SSL certifikátu (ACME).
+  RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+  RewriteCond %{REQUEST_URI} !^/\.well-known/
+  RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
+
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+  RewriteCond %{REQUEST_URI} !^/\.well-known/
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+  RewriteRule ^index\.html$ - [L]
+
+  # --- Prerenderované podstránky ------------------------------------------
+  # /connect, /seo-novy-jicin, … jsou po buildu složky s vlastním index.html
+  # (hotový obsah i hlavička). Servíruj ho přímo – i pro /cesta bez lomítka,
+  # bez 301 redirectu na /cesta/.
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteCond %{REQUEST_FILENAME}/index.html -f
+  RewriteRule ^(.+?)/?$ /$1/index.html [L]
+
+  # --- SPA fallback ---------------------------------------------------------
+  # Zbytek (neznámé cesty) přepíšeme na kořenový index.html a routu vyřídí
+  # React. Skutečné soubory a PHP endpointy se servírují beze změny.
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  RewriteRule . /index.html [L]
+</IfModule>
+
+# Když už složka index.html má, ať ho Apache bere jako výchozí dokument.
+DirectoryIndex index.html
+
+# --- Zákaz přístupu k citlivým souborům --------------------------------------
+# config.php nese ostré klíče. Přes HTTP se nesmí otevřít; PHP si ho přes
+# require() načte dál (.htaccess omezuje jen HTTP požadavky, ne čtení z disku).
+<FilesMatch "^(config\.php|config\.example\.php|_ratelimit\.php)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
+# Skryté soubory, zálohy a dumpy – kdyby se sem něco zatoulalo.
+# (.htaccess je Apache chráněný sám, .well-known se nechává průchozí.)
+<FilesMatch "(^\.(?!well-known)|~$|\.(bak|old|orig|log|sql|sh|zip|tar|gz)$)">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
+# --- Vypnout výpis obsahu složek -------------------------------------------
+Options -Indexes
+
+# --- Bezpečnostní hlavičky + cache ----------------------------------------
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "geolocation=(), camera=(), microphone=(), payment=(), usb=(), interest-cohort=()"
+  Header always set Cross-Origin-Opener-Policy "same-origin"
+
+  # HTML se nikdy necachuje natvrdo → nová verze webu je hned vidět.
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+
+  # Otisknuté buildy (assets/ mají hash v názvu) → rok, immutable.
+  <FilesMatch "\.(js|mjs|css|woff2?)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  # Obrázky mají stabilní názvy (logos/, reference/, connect/) → týden,
+  # ať se výměna projeví, ale nestahují se pořád dokola.
+  <FilesMatch "\.(jpg|jpeg|png|webp|avif|gif|svg|ico)$">
+    Header set Cache-Control "public, max-age=604800"
+  </FilesMatch>
+
+  # robots.txt, sitemap.xml → den.
+  <FilesMatch "\.(xml|txt)$">
+    Header set Cache-Control "public, max-age=86400"
+  </FilesMatch>
+</IfModule>
+
+# --- Komprese textových odpovědí ----------------------------------------
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml \
+    application/javascript application/json application/xml image/svg+xml \
+    application/rss+xml application/manifest+json
+</IfModule>
+
+# --- MIME typy (pojistka pro starší Apache) ---------------------------------
+<IfModule mod_mime.c>
+  AddType application/javascript js mjs
+  AddType image/webp             webp
+  AddType image/avif             avif
+  AddType font/woff2             woff2
+</IfModule>
+
+# --- Volitelné (zapni až vědomě) ------------------------------------------
+#
+# HSTS — přinutí prohlížeč používat výhradně HTTPS po dobu `max-age`.
+# Zapni, až si budeš jistý, že HTTPS spolehlivě funguje na webkozar.cz
+# i na www. Je to „lepkavé": jednou nastavené se v prohlížečích neodvolá.
+#   <IfModule mod_headers.c>
+#     Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+#   </IfModule>
+#
+# CSP — omezí, odkud se smí načítat skripty/styly/… Web je skoro celý
+# self-hosted (fonty i JS jsou v assets/), takže by mohla být přísná.
+# `style-src 'unsafe-inline'` je nutné kvůli inline stylům Reactu a `motion`.
+# Když přidáš Google Analytics, doplň do `script-src`/`connect-src` jeho domény.
+# Nasazuj až po otestování (klidně nejdřív přes `Content-Security-Policy-Report-Only`).
+#   <IfModule mod_headers.c>
+#     Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'self'; base-uri 'self'; form-action 'self'"
+#   </IfModule>
