@@ -27,7 +27,7 @@ function Footer() {
             <div className="flex items-center gap-3">
               <img
                 src="/logos/webkozar-logo-icon.svg"
-                alt="webkozar – tvorba webových stránek"
+                alt=""
                 width="40"
                 height="40"
                 loading="lazy"
@@ -56,7 +56,7 @@ function Footer() {
 
           {/* Sloupec 2: Navigace + Služby */}
           <div className="lg:col-span-2 lg:col-start-6">
-            <h4 className="text-white font-bold mb-6 text-lg" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>Navigace</h4>
+            <h2 className="text-white font-bold mb-6 text-lg" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>Navigace</h2>
             <ul className="flex flex-col gap-4 text-gray-400" style={{ fontFamily: 'Outfit, sans-serif' }}>
               {navLinks.map((link) => (
                 <li key={link.name}>
@@ -75,7 +75,7 @@ function Footer() {
               ))}
             </ul>
 
-            <h4 className="text-white font-bold mt-8 mb-6 text-lg" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>Služby</h4>
+            <h2 className="text-white font-bold mt-8 mb-6 text-lg" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>Služby</h2>
             <ul className="flex flex-col gap-4 text-gray-400" style={{ fontFamily: 'Outfit, sans-serif' }}>
               {SERVICE_LINKS.map((s) => (
                 <li key={s.to}>
@@ -90,7 +90,7 @@ function Footer() {
 
           {/* Sloupec 3: Kontakt a Lokace (Zabírá 3 sloupce) */}
           <div className="lg:col-span-3">
-            <h4 className="text-white font-bold mb-6 text-lg" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>Kde nás najdete</h4>
+            <h2 className="text-white font-bold mb-6 text-lg" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>Kde nás najdete</h2>
             <ul className="flex flex-col gap-6 text-gray-400" style={{ fontFamily: 'Outfit, sans-serif' }}>
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-[#0EC3BF] shrink-0 mt-0.5" />
@@ -119,7 +119,7 @@ function Footer() {
               <div className="absolute inset-0 bg-gradient-to-br from-[#0EC3BF]/20 to-purple-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
               <div className="relative z-10">
                 <Terminal className="w-8 h-8 text-white/50 mb-4" />
-                <h4 className="text-xl font-bold text-white mb-2" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>Máte projekt?</h4>
+                <h2 className="text-xl font-bold text-white mb-2" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>Máte projekt?</h2>
                 <p className="text-gray-400 text-sm mb-6" style={{ fontFamily: 'Outfit, sans-serif' }}>
                   Pojďme ho společně nakódovat k dokonalosti.
                 </p>
@@ -140,14 +140,14 @@ function Footer() {
         {/* Spodní lišta: Copyright & Socials */}
         <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-white/10 gap-4">
           <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
-            <p className="text-gray-500 text-sm text-center" style={{ fontFamily: 'Outfit, sans-serif' }}>
+            <p className="text-gray-400 text-sm text-center" style={{ fontFamily: 'Outfit, sans-serif' }}>
               © {currentYear} <a href="https://webkozar.cz/" className="hover:text-[#0EC3BF] transition-colors">Tvorba webových stránek Nový Jičín.</a> Všechna práva vyhrazena.
             </p>
             <div className="flex items-center gap-4">
               <button
                 type="button"
                 onClick={openCookiePolicy}
-                className="text-gray-500 text-sm hover:text-[#0EC3BF] transition-colors cursor-pointer"
+                className="text-gray-400 text-sm hover:text-[#0EC3BF] transition-colors cursor-pointer"
                 style={{ fontFamily: 'Outfit, sans-serif' }}
               >
                 Zásady cookies
@@ -155,7 +155,7 @@ function Footer() {
               <button
                 type="button"
                 onClick={openCookieSettings}
-                className="text-gray-500 text-sm hover:text-[#0EC3BF] transition-colors cursor-pointer"
+                className="text-gray-400 text-sm hover:text-[#0EC3BF] transition-colors cursor-pointer"
                 style={{ fontFamily: 'Outfit, sans-serif' }}
               >
                 Nastavení cookies
@@ -164,17 +164,23 @@ function Footer() {
           </div>
 
           <div className="flex items-center gap-4">
-              <a 
-                href="https://github.com/webkozar" 
+              <a
+                href="https://github.com/webkozar"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub webkozar (otevře se v novém okně)"
                 className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:border-[#0EC3BF]/50 hover:bg-[#0EC3BF]/10 hover:shadow-[0_0_15px_rgba(14,195,191,0.2)] transition-all"
               >
-                <Github className="w-4 h-4" />
+                <Github className="w-4 h-4" aria-hidden="true" />
               </a>
-              <a 
-                href="https://www.linkedin.com/in/martin-kozar-306bb8305" 
+              <a
+                href="https://www.linkedin.com/in/martin-kozar-306bb8305"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn Martina Kozara (otevře se v novém okně)"
                 className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:border-[#0EC3BF]/50 hover:bg-[#0EC3BF]/10 hover:shadow-[0_0_15px_rgba(14,195,191,0.2)] transition-all"
               >
-                <Linkedin className="w-4 h-4" />
+                <Linkedin className="w-4 h-4" aria-hidden="true" />
               </a>
           </div>
         </div>

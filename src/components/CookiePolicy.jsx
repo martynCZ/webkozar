@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { motion } from 'motion/react';
 import { X, ShieldCheck } from 'lucide-react';
 import { COOKIE_CATEGORIES, openCookieSettings } from '../lib/cookieConsent';
+import { useBodyScrollLock } from '../lib/useBodyScrollLock';
 
 /**
  * Zásady zpracování cookies a osobních údajů.
@@ -9,22 +10,19 @@ import { COOKIE_CATEGORIES, openCookieSettings } from '../lib/cookieConsent';
  * na které se odkazuje z lišty i z patičky.
  */
 function CookiePolicy({ isOpen, onClose }) {
-  // Zavření klávesou Esc + zamknutí scrollu na pozadí.
+  // Scroll na pozadí zamyká sdílený hook (čítač – snese víc vrstev naráz).
+  useBodyScrollLock(isOpen);
+
+  // Zavření klávesou Esc.
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen) return undefined;
 
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') onClose();
     };
 
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
     window.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener('keydown', handleKeyDown);
-    };
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
 
   // Bez AnimatePresence: exit animace se nedokončovala a modal zůstával
@@ -42,8 +40,12 @@ function CookiePolicy({ isOpen, onClose }) {
           aria-modal="true"
           aria-labelledby="cookie-policy-title"
         >
-          <div
-            className="absolute inset-0 bg-[#050117]/80 backdrop-blur-sm"
+          {/* Pozadí zavírá kliknutím; klávesnice má Esc + zavírací „X". */}
+          <button
+            type="button"
+            aria-label="Zavřít zásady zpracování cookies"
+            tabIndex={-1}
+            className="absolute inset-0 bg-[#050117]/80 backdrop-blur-sm cursor-default"
             onClick={onClose}
           />
 

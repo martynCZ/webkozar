@@ -13,7 +13,7 @@ function Home() {
   usePageMeta('/')
 
   return (
-    <main>
+    <main id="obsah">
       <Hero />
       <Process />
       <Pricing />

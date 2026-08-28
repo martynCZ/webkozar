@@ -34,6 +34,15 @@ h1, h2, h3, h4, h5, h6 {
   font-family: 'Space Grotesk', sans-serif;
 }
 
+/* Jednotný viditelný fokus pro klávesnici. `:focus-visible` = jen když
+   prohlížeč pozná, že jde o navigaci klávesnicí (ne po kliknutí myší).
+   Tlačítka i odkazy mají většinou `rounded-full`, proto větší offset. */
+:focus-visible {
+  outline: 2px solid #0EC3BF;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 /* Pomalý drift jedné vrstvy pozadí (jen md+, viz AnimatedBackground).
    Animuje se transform → GPU, bez překreslení. */
 @keyframes wk-bg-drift {

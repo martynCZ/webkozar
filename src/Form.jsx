@@ -11,7 +11,8 @@ function Form() {
     balicek: '',
     message: ''
   });
-  const [status, setStatus] = useState('');
+  // Stav odeslání: 'idle' | 'sending' | 'success' | 'error'
+  const [status, setStatus] = useState('idle');
 
   // Antispam: čas načtení formuláře + honeypot pole (viz send-email.php).
   const renderedAtRef = useRef(0);
@@ -46,12 +47,10 @@ function Form() {
       });
 
       if (response.ok) {
+        // Potvrzení necháváme zobrazené natrvalo (do dalšího odeslání) –
+        // po 3 s mizející hláška se dala snadno minout.
         setStatus('success');
         setFormData({ name: '', email: '', balicek: '', message: '' });
-        setTimeout(() => {
-          setStatus('idle');
-        }, 3000);
-
       } else {
         setStatus('error');
       }
@@ -79,7 +78,7 @@ function Form() {
             <h3 className="text-2xl font-bold text-white mb-6" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>Napište nám</h3>
 
             {status === 'success' ? (
-              <div className="text-center py-20 text-[#0EC3BF] flex flex-col items-center h-full justify-center">
+              <div role="status" className="text-center py-20 text-[#0EC3BF] flex flex-col items-center h-full justify-center">
                 <Check className="w-16 h-16 mb-4 p-3 rounded-full bg-[#0EC3BF]/20 border border-[#0EC3BF]/50" />
                 <p className="text-xl font-bold text-white" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>Zpráva byla úspěšně odeslána!</p>
                 <p className="text-gray-400 mt-2">Brzy se vám ozveme zpět.</p>
@@ -194,24 +193,24 @@ function Form() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm mt-3" style={{ fontFamily: 'Outfit, sans-serif' }}>
                     <div>
-                      <p className="text-gray-500 mb-0.5">IČO</p>
+                      <p className="text-gray-400 mb-0.5">IČO</p>
                       <p className="text-gray-300 font-medium">72996293</p>
                     </div>
                     <div>
-                      <p className="text-gray-500 mb-0.5">DIČ</p>
+                      <p className="text-gray-400 mb-0.5">DIČ</p>
                       <p className="text-gray-300 font-medium">CZ7802015298</p>
                     </div>
                     <div>
-                      <p className="text-gray-500 mb-0.5">Adresa</p>
+                      <p className="text-gray-400 mb-0.5">Adresa</p>
                       <p className="text-gray-300 font-medium">Malá Strana 298, 742 47 Hladké Životice</p>
                     </div>
                     <div>
-                      <p className="text-gray-500 mb-0.5">Osoba</p>
+                      <p className="text-gray-400 mb-0.5">Osoba</p>
                       <p className="text-gray-300 font-medium">Petr Kozar</p>
                     </div>
                   </div>
                   <div className="mt-5 pt-4 border-t border-white/5">
-                    <p className="text-sm text-gray-500 leading-relaxed" style={{ fontFamily: 'Outfit, sans-serif' }}>
+                    <p className="text-sm text-gray-400 leading-relaxed" style={{ fontFamily: 'Outfit, sans-serif' }}>
                       Fyzická osoba zapsaná v Živnostenském rejstříku od 2.4.2001
                     </p>
                   </div>

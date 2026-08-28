@@ -133,7 +133,7 @@ const showReference = (projekty) =>{
                 <div className="relative aspect-[4/3] overflow-hidden">
                   <img
                     src={project.image}
-                    alt={`Tvorba webových stránek pro ${project.title}`}
+                    alt={`Náhled webu ${project.title} – ${project.category}`}
                     width="800"
                     height="600"
                     loading={index === 0 ? 'eager' : 'lazy'}
@@ -143,7 +143,12 @@ const showReference = (projekty) =>{
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0a0118] via-[#0a0118]/50 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
                   <div className="absolute inset-0 border-2 border-[#0EC3BF]/0 group-hover:border-[#0EC3BF]/50 rounded-2xl transition-all duration-500" />
                   <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    <a href={project.link} target="_blank" rel="noopener noreferrer">
+                    <a
+                      href={project.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`Zobrazit projekt ${project.title} (otevře se v novém okně)`}
+                    >
                       <div className="px-6 py-3 rounded-full bg-gradient-to-r from-[#0EC3BF] to-purple-600 text-white font-semibold flex items-center gap-2 shadow-[0_0_40px_rgba(14,195,191,0.8)]">
                       <span style={{ fontFamily: 'Outfit, sans-serif' }}>Zobrazit projekt</span>
                       <ExternalLink aria-hidden="true" className="w-4 h-4" />
@@ -174,6 +179,7 @@ const showReference = (projekty) =>{
                       href={project.link}
                       target="_blank"
                       rel="noopener noreferrer"
+                      aria-label={`${project.title} – otevřít web v novém okně`}
                       className="inline-flex items-center gap-1.5 hover:text-[#0EC3BF] transition-colors"
                     >
                       {project.title}

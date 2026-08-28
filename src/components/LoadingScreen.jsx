@@ -1,13 +1,11 @@
 import { motion, useReducedMotion } from 'motion/react';
 import { useEffect } from 'react';
+import { useBodyScrollLock } from '../lib/useBodyScrollLock';
 
 export function LoadingScreen({ onComplete }) {
   const reduceMotion = useReducedMotion();
 
-  useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = ''; };
-  }, []);
+  useBodyScrollLock(true);
 
   // Pojistka: v neaktivní záložce prohlížeč pozastaví animace, takže
   // onAnimationComplete nemusí nikdy proběhnout a návštěvník by zůstal

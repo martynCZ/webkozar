@@ -88,7 +88,7 @@ function ConnectPage() {
   usePageMeta('/connect');
 
   return (
-    <main className="relative z-10 px-4 pt-32 md:pt-40 pb-16 md:pb-24">
+    <main id="obsah" className="relative z-10 px-4 pt-32 md:pt-40 pb-16 md:pb-24">
       <div className="max-w-[95%] md:max-w-[80%] mx-auto">
         {/* ---------- Hero ---------- */}
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-28 md:mb-40">

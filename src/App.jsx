@@ -71,6 +71,13 @@ function App() {
   return (
     <MotionConfig reducedMotion="user">
       <div className="relative min-h-screen overflow-clip">
+        <a
+          href="#obsah"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[200] focus:rounded-full focus:bg-[#0EC3BF] focus:px-5 focus:py-2 focus:font-medium focus:text-[#050117] focus:shadow-[0_0_20px_rgba(14,195,191,0.5)]"
+          style={{ fontFamily: 'Outfit, sans-serif' }}
+        >
+          Přeskočit na obsah
+        </a>
         <AnimatePresence>
           {isLoading && (
             <LoadingScreen onComplete={finishLoading} />

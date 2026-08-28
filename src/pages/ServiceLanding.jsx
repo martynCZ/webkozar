@@ -52,7 +52,7 @@ function ServiceLanding({ variant }) {
   const jsonLd = buildJsonLd(data, pathname);
 
   return (
-    <main className="relative z-10 px-4 pt-32 md:pt-40 pb-16 md:pb-24">
+    <main id="obsah" className="relative z-10 px-4 pt-32 md:pt-40 pb-16 md:pb-24">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

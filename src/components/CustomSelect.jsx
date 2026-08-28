@@ -1,42 +1,33 @@
-import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { PACKAGES } from '../lib/selectPackage';
 
+// Nativní <select> stylovaný do vzhledu webu. Dřív to byl vlastní dropdown,
+// který nešel ovládat klávesnicí ani čtečkou (viz AUDIT.md sekce 4). Nativní
+// prvek řeší přístupnost, mobilní UI i klávesnici zadarmo; stylujeme jen
+// zavřený stav (`appearance-none` + vlastní šipka), rozbalené menu vykresluje
+// prohlížeč / OS.
 function CustomSelect({ value, onSelect, labelId }) {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const selected = PACKAGES.find((opt) => opt.value === value) || null;
-
   return (
     <div className="relative w-full">
-      <button
-        type="button"
-        onClick={() => setIsOpen(!isOpen)}
+      <select
+        value={value}
+        onChange={(e) => onSelect(e.target.value)}
         aria-labelledby={labelId}
-        aria-haspopup="listbox"
-        aria-expanded={isOpen}
-        className="w-full px-4 py-3 rounded-2xl bg-white/5 border border-white/10 text-[#938D9C] flex justify-between items-center hover:bg-white/10 transition-all"
+        className="w-full appearance-none px-4 py-3 pr-11 rounded-2xl bg-white/5 border border-white/10 text-white focus:ring-2 focus:ring-[#0EC3BF]/50 outline-none transition-all cursor-pointer [&>option]:bg-[#0a0620] [&>option]:text-gray-200"
       >
-        {selected ? selected.label : "Vyberte balíček"}
-        {<ChevronDown size={20} className={`transition-transform ${isOpen ? 'rotate-180' : ''} w-5 h-5 text-[#0EC3BF]`} />}
-      </button>
-
-      {isOpen && (
-        <div className="absolute top-full left-0 w-full mt-2 bg-[#0a0620] border border-white/10 rounded-2xl overflow-hidden shadow-2xl z-50">
-          {PACKAGES.map((opt) => (
-            <div
-              key={opt.value}
-              onClick={() => {
-                onSelect(opt.value);
-                setIsOpen(false);
-              }}
-              className="px-4 py-3 hover:bg-[#0EC3BF]/20 cursor-pointer text-gray-200 hover:text-white transition-colors"
-            >
-              {opt.label}
-            </div>
-          ))}
-        </div>
-      )}
+        <option value="" disabled>
+          Vyberte balíček
+        </option>
+        {PACKAGES.map((opt) => (
+          <option key={opt.value} value={opt.value}>
+            {opt.label}
+          </option>
+        ))}
+      </select>
+      <ChevronDown
+        aria-hidden="true"
+        className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#0EC3BF]"
+      />
     </div>
   );
 }

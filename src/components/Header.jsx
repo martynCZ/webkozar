@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, LayoutDashboard } from 'lucide-react';
 import { NAV_LINKS as navLinks } from '../lib/navLinks';
+import { useBodyScrollLock } from '../lib/useBodyScrollLock';
 import CtaButton from './CtaButton';
 
 function Header() {
@@ -15,16 +16,7 @@ function Header() {
   // Kotva na sekci: na domovské stránce scrolluje, odjinud vede zpět na `/`.
   const hashHref = (hash) => (isHome ? hash : `/${hash}`);
 
-  useEffect(() => {
-    if (isMobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [isMobileMenuOpen]);
+  useBodyScrollLock(isMobileMenuOpen);
 
   // Scroll-spy: která položka menu odpovídá referenční čáře ~35 % pod horním
   // okrajem. Každá sledovaná sekce „platí" až do začátku té další (takže
@@ -109,7 +101,7 @@ function Header() {
           <Link to="/" className="flex items-center gap-2 z-50">
             <img
               src="/logos/webkozar-logo-icon.svg"
-              alt="webkozar – tvorba webových stránek"
+              alt="webkozar"
               width="32"
               height="32"
               className="w-8 h-8 object-contain rounded-md"
@@ -188,7 +180,8 @@ function Header() {
           </div>
 
           <button
-            aria-label="Toggle mobile menu"
+            aria-label={isMobileMenuOpen ? 'Zavřít menu' : 'Otevřít menu'}
+            aria-expanded={isMobileMenuOpen}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="md:hidden relative z-50 p-2 text-white bg-white/5 border border-white/10 rounded-full hover:bg-white/10 transition-colors"
           >

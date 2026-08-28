@@ -138,7 +138,6 @@ function Technologies() {
                 <div className="relative p-8 rounded-3xl bg-gradient-to-br from-white/8 via-white/4 to-transparent backdrop-blur-xl border border-white/15 shadow-[0_0_40px_rgba(14,195,191,0.15)] hover:shadow-[0_0_60px_rgba(14,195,191,0.3)] transition-all duration-500 group">
                   <div
                     className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${techItem.color} p-4 shadow-[0_0_40px_rgba(14,195,191,0.4)] group-hover:shadow-[0_0_60px_rgba(14,195,191,0.6)] transition-all duration-500`}
-                    style={{ transform: "translateZ(75px)" }}
                   >
                     <div className="text-white">
                       {techItem.icon}
