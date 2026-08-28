@@ -2,6 +2,13 @@
 declare(strict_types=1);
 
 $config = require __DIR__ . '/config.php';
+
+// Ladicí vypínač rate limitů (config.php: 'rate_limit_disabled' => true).
+// V běžném provozu musí být false / chybět.
+if (!empty($config['rate_limit_disabled'])) {
+    define('RATE_LIMIT_DISABLED', true);
+}
+
 require __DIR__ . '/_ratelimit.php';
 
 // --- CORS: pouze povolené domény ---
@@ -27,15 +34,18 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
 
 // --- Rate limiting: CORS chrání jen prohlížeč, ne přímé volání přes curl. ---
 // Krátký burst limit (rychlé mačkání) + hodinový strop (ochrana nákladů OpenAI).
-if (!rate_limit_ok('ai-api-burst', 3, 20) || !rate_limit_ok('ai-api-hour', 15, 3600)) {
+// Limity počítají per IP – za sdílenou IP (kancelář, mobilní CGN NAT) sedí víc
+// lidí, proto je hodinový strop volnější. Lze doladit v config.php bez buildu.
+$burstMax = max(1, (int)($config['ai_rate_burst'] ?? 5));
+$hourMax  = max(1, (int)($config['ai_rate_hour'] ?? 60));
+if (!rate_limit_ok('ai-api-burst', $burstMax, 20) || !rate_limit_ok('ai-api-hour', $hourMax, 3600)) {
     http_response_code(429);
-    echo json_encode(["error" => "Příliš mnoho dotazů. Zkuste to prosím za chvíli."]);
+    echo json_encode(["error" => "Vyčerpali jste limit dotazů na AI asistenta. Zkuste to prosím za pár minut, nebo nám napište přes formulář níže či na info@webkozar.cz."]);
     exit;
 }
 
 $data = json_decode(file_get_contents("php://input"));
 $userInput = trim((string)($data->message ?? ''));
-$requestType = ($data->type ?? 'chat') === 'wizard' ? 'wizard' : 'chat';
 
 if ($userInput === '') {
     echo json_encode(["error" => "Nebylo zadáno žádné zadání."]);
@@ -47,6 +57,30 @@ if (mb_strlen($userInput) > 2000) {
     $userInput = mb_substr($userInput, 0, 2000);
 }
 
+// --- Historie konverzace -----------------------------------------------
+// Frontend posílá `history` = pole { role: 'user'|'assistant', content: '...' }
+// s předchozími replikami (bez aktuální zprávy). Bereme posledních
+// MAX_HISTORY položek, každou ořízneme na MAX_HISTORY_LEN znaků. Cizí role
+// a prázdné položky zahazujeme.
+$maxHistory = 10;
+$maxHistoryLen = 1500;
+$history = [];
+if (isset($data->history) && is_array($data->history)) {
+    foreach ($data->history as $turn) {
+        $role = is_object($turn) ? ($turn->role ?? '') : '';
+        $content = is_object($turn) ? trim((string)($turn->content ?? '')) : '';
+        if (($role === 'user' || $role === 'assistant') && $content !== '') {
+            if (mb_strlen($content) > $maxHistoryLen) {
+                $content = mb_substr($content, 0, $maxHistoryLen);
+            }
+            $history[] = ['role' => $role, 'content' => $content];
+        }
+    }
+    if (count($history) > $maxHistory) {
+        $history = array_slice($history, -$maxHistory);
+    }
+}
+
 $db_host = $config['db_host'];
 $db_name = $config['db_name'];
 $db_user = $config['db_user'];
@@ -54,49 +88,125 @@ $db_pass = $config['db_pass'];
 
 $apiKey = $config['openai_api_key'];
 
-// SPOLEČNÉ ZNALOSTI PRO OBA REŽIMY
-$baseKnowledge = "Jsi přátelský, vysoce profesionální a moderní AI asistent webového studia 'webkozar' (působící primárně v oblastech Nový Jičín a Ostrava).
-ZNALOSTI O FIRMĚ: Jsme firma s více než 10 lety zkušeností. Tvoříme moderní, rychlé a responzivní weby. Pro design využíváme Figma. Pracujeme s WordPressem, Reactem. Dbáme na SEO (Analytics, Search Console). Tvorba trvá 2-6 týdnů. Reference: Okna Jančálek, Baspyr Glass, F.S.C. Bezpečnostní poradenství, ZŠ a MŠ Hladké Životice.
-CENÍK: 
-1. 'Základní web' (od 10 000 Kč) - pro osobní vizitky, do 5 stránek. ID: zakladni
-2. 'Standardní web' (od 15 000 Kč) - pro firmy, pokročilé SEO, do 15 stránek. ID: standard
-3. 'Web na míru' (od 25 000 Kč) - Komplexní řešení, portály, e-shopy, napojení na systémy. ID: na-miru
-";
-
-// ROZDĚLENÍ PROMPTŮ PODLE TOHO, Z KTERÉ KOMPONENTY POŽADAVEK PŘIŠEL
-if ($requestType === 'wizard') {
-    // ---------------------------------------------
-    // TOTO SE SPUSTÍ PRO AIChatbot.jsx (PRŮVODCE)
-    // ---------------------------------------------
-    $systemPrompt = $baseKnowledge . "
-Tvým úkolem je na základě popisu projektu od klienta vybrat nejvhodnější balíček z našeho ceníku a odhadnout cenu.
-
-Odpověz STRIKTNĚ jako validní JSON objekt s TĚMITO TŘEMI klíči:
-- 'doporuceni': Krátké (1-2 odstavce) zdůvodnění, proč doporučuješ daný balíček, psané přátelsky přímo klientovi.
-- 'cena': Odhadovaná cena (např. 'od 15 000 Kč' nebo '25 000 - 40 000 Kč').
-- 'balicek': Přesné ID doporučeného balíčku (musí být striktně 'zakladni', 'standard' nebo 'na-miru').";
-
-} else {
-    // ---------------------------------------------
-    // TOTO SE SPUSTÍ PRO LiveChatWidget.jsx (BUBLINA)
-    // ---------------------------------------------
-    $systemPrompt = $baseKnowledge . "
-Tvým úkolem je komunikovat s návštěvníky webu, zodpovídat jejich dotazy a pomáhat jim.
-PRAVIDLA KOMUNIKACE: Odpovídej VŽDY česky, energicky, ale slušně a přirozeně. Nepiš dlouhé slohy. Důležité pojmy piš **tučně**. Pokud klient chce přesnou cenovou nabídku nad rámec ceníku, požádej ho, ať nám zanechá kontakt. Nevymýšlej si služby.
-
-Odpověz STRIKTNĚ jako validní JSON objekt s JEDNÍM jediným klíčem 'reply', který bude obsahovat tvou zprávu:
-{
-  \"reply\": \"Tvá formátovaná konverzační odpověď klientovi.\"
-}";
+// --- Znalosti z jednoho zdroje (ai-knowledge.json) ---------------------
+// Když soubor chybí nebo je rozbitý, spadneme na holé minimum, ať asistent
+// pořád funguje (jen bez detailů).
+$kb = json_decode((string)@file_get_contents(__DIR__ . '/ai-knowledge.json'), true);
+if (!is_array($kb)) {
+    error_log('ai-api.php: ai-knowledge.json chybí nebo je nevalidní');
+    $kb = ['company' => ['name' => 'webkozar'], 'packages' => [], 'faq' => [], 'tone' => [], 'examples' => []];
 }
 
+/** Sestaví textový blok znalostí o firmě, ceníku a FAQ pro system prompt. */
+function build_knowledge_block(array $kb): string {
+    $c = $kb['company'] ?? [];
+    $out = "ZNALOSTI O STUDIU webkozar:\n";
+    foreach ([
+        'obor' => 'Obor', 'pusobnost' => 'Působnost', 'zkusenosti' => 'Zkušenosti',
+        'postup' => 'Postup spolupráce', 'doba_dodani' => 'Doba dodání',
+        'sluzby_navic' => 'Služby navíc', 'kontakt' => 'Kontakt',
+    ] as $key => $label) {
+        if (!empty($c[$key])) {
+            $out .= "- $label: {$c[$key]}\n";
+        }
+    }
+    if (!empty($c['technologie'])) {
+        $out .= '- Technologie: ' . implode(', ', $c['technologie']) . "\n";
+    }
+    if (!empty($c['reference'])) {
+        $out .= '- Reference: ' . implode(', ', $c['reference']) . "\n";
+    }
+
+    $out .= "\nCENÍK (ID používej přesně):\n";
+    foreach ($kb['packages'] ?? [] as $p) {
+        $feat = !empty($p['features']) ? ' – ' . implode(', ', $p['features']) : '';
+        $out .= "- {$p['label']} ({$p['cena_text']}), ID: {$p['id']}. {$p['podtitulek']}.$feat\n";
+    }
+
+    if (!empty($kb['connect'])) {
+        $cn = $kb['connect'];
+        $out .= "\n{$cn['nazev']} (klientský portál):\n";
+        $out .= "- {$cn['co_to_je']}\n";
+        $out .= "- K čemu: {$cn['k_cemu']}\n";
+        if (!empty($cn['funkce'])) {
+            $out .= '- Funkce: ' . implode('; ', $cn['funkce']) . "\n";
+        }
+        if (!empty($cn['adresa'])) {
+            $out .= "- Adresa: {$cn['adresa']} (detail na webu: {$cn['detail_na_webu']})\n";
+        }
+    }
+
+    if (!empty($kb['faq'])) {
+        $out .= "\nČASTÉ DOTAZY:\n";
+        foreach ($kb['faq'] as $f) {
+            $out .= "Q: {$f['q']}\nA: {$f['a']}\n";
+        }
+    }
+    return $out;
+}
+
+$knowledgeBlock = build_knowledge_block($kb);
+$toneBlock = !empty($kb['tone']) ? "\nJAK KOMUNIKOVAT:\n- " . implode("\n- ", $kb['tone']) . "\n" : '';
+$refusalBlock = !empty($kb['refusal']) ? "\nMIMO TÉMA: {$kb['refusal']}\n" : '';
+
+$intro = "Jsi AI asistent webového studia webkozar. Pomáháš návštěvníkům webu.\n\n";
+
+// LiveChatWidget.jsx – jediný chat (dřív byl navíc jednorázový wizard v ceníku,
+// zrušen; jeho funkci „doporuč balíček + odhad ceny" pokrývá akce odhad_ceny).
+$systemPrompt = $intro . $knowledgeBlock . $toneBlock . $refusalBlock . "
+ÚKOL: Konverzuj s návštěvníkem, odpovídej na dotazy o webech, cenách a spolupráci.
+
+Odpověz STRIKTNĚ jako validní JSON objekt:
+{ \"reply\": \"tvoje formátovaná odpověď\", \"akce\": null }
+
+Klíč \"akce\" nech null, dokud návštěvník jen komunikuje. Když ale JASNĚ projeví
+záměr, vyplň akci – frontend ji hned provede a ty v \"reply\" krátce potvrď, cos udělal:
+- Chce konkrétní balíček (\"beru standard\", \"chci ten za 15 tisíc\"):
+  \"akce\": { \"typ\": \"predvypln_formular\", \"balicek\": \"zakladni|standard|na-miru\" }
+  (předvyplní balíček v poptávkovém formuláři a odscrolluje k němu)
+- Chce vidět konkrétní sekci webu (\"ukaž ceník\", \"kde máte reference\"):
+  \"akce\": { \"typ\": \"prejdi_na\", \"sekce\": \"cenik|kontakt|faq|reference|tvorba|technologie\" }
+- Popíše projekt a chce doporučit balíček / odhad ceny:
+  \"akce\": { \"typ\": \"odhad_ceny\", \"balicek\": \"zakladni|standard|na-miru\", \"cena\": \"např. 25 000 – 40 000 Kč\", \"zduvodneni\": \"1–2 věty proč\" }
+  (frontend ukáže kartu s balíčkem, cenou a tlačítkem Poptat). \"cena\" je odhad
+  rozsahu, ne závazná nabídka – to v \"reply\" zmiň.
+- Chce nezávaznou nabídku / aby se mu studio ozvalo: poptávku umíš připravit rovnou
+  tady v chatu (není nutné jít na formulář). NEJDŘÍV si v běžné konverzaci vyžádej
+  jméno a e-mail (telefon nepovinně) a stručně si shrň, co potřebuje. Až tyhle
+  údaje máš, vrať:
+  \"akce\": { \"typ\": \"navrhnout_poptavku\", \"jmeno\": \"...\", \"email\": \"...\", \"telefon\": \"\", \"balicek\": \"\", \"shrnuti\": \"1–3 věty co klient chce\" }
+  (\"balicek\" vyplň jen když je jasný, jinak prázdný řetězec.) Frontend
+  návštěvníkovi zobrazí údaje k překontrolování a tlačítko Odeslat – odešle je
+  až on sám. V \"reply\" ho vyzvi, ať to zkontroluje a potvrdí tlačítkem.
+  Nikdy nepiš, že poptávku vezmete jen přes formulář nebo e-mail – vezmeš ji tady.
+Nikdy nevymýšlej jiné hodnoty klíčů. Když si záměrem nejsi jistý, \"akce\": null.";
+
+// Pozn.: `assistant` položky v historii jsou prostý text (frontend si ukládá
+// vytažené `reply`, ne surový JSON). Modelu to jako kontext stačí, novou
+// odpověď stejně vrací jako JSON (vynuceno `response_format`).
+$messages = [["role" => "system", "content" => $systemPrompt]];
+
+// Few-shot příklady správného tónu.
+// Volitelný klíč `akce` v příkladu ukazuje modelu i tvar akcí.
+foreach ($kb['examples'] ?? [] as $ex) {
+    if (!empty($ex['user']) && !empty($ex['assistant'])) {
+        $messages[] = ['role' => 'user', 'content' => $ex['user']];
+        $messages[] = ['role' => 'assistant', 'content' => json_encode(
+            ['reply' => $ex['assistant'], 'akce' => $ex['akce'] ?? null],
+            JSON_UNESCAPED_UNICODE
+        )];
+    }
+}
+
+foreach ($history as $turn) {
+    $messages[] = $turn;
+}
+$messages[] = ["role" => "user", "content" => $userInput];
+
 $postData = [
-    "model" => "gpt-4o-mini",
+    "model" => $config['openai_model'] ?? 'gpt-4o-mini',
     "response_format" => [ "type" => "json_object" ],
-    "messages" => [
-        ["role" => "system", "content" => $systemPrompt],
-        ["role" => "user", "content" => $userInput]
-    ],
+    "messages" => $messages,
     "temperature" => 0.7
 ];
 
@@ -120,33 +230,92 @@ if ($httpCode !== 200) {
 
 $responseData = json_decode($response, true);
 
-if (isset($responseData['choices'][0]['message']['content'])) {
-    
-    $aiResponseJson = $responseData['choices'][0]['message']['content'];
-    $aiParsed = json_decode($aiResponseJson, true);
-    
-    // Zápis do databáze
-    $dbLogText = ($requestType === 'wizard') 
-        ? ($aiParsed['doporuceni'] ?? 'Chyba v parsování odpovědi (wizard)') 
-        : ($aiParsed['reply'] ?? 'Chyba v parsování odpovědi (chat)');
-
-    try {
-        $pdo = new PDO("mysql:host=$db_host;dbname=$db_name;charset=utf8", $db_user, $db_pass);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        
-        $stmt = $pdo->prepare("INSERT INTO ai_chat_logs (user_message, ai_response) VALUES (:umsg, :aresp)");
-        $stmt->execute([
-            ':umsg' => $userInput,
-            ':aresp' => $dbLogText
-        ]);
-    } catch(PDOException $e) {
-        
-    }
-    
-    // Odeslání odpovědi zpět do Reactu
-    echo $aiResponseJson;
-
-} else {
+if (!isset($responseData['choices'][0]['message']['content'])) {
     echo json_encode(["error" => "AI nevrátila správný formát dat."]);
+    exit();
 }
+
+$aiResponseJson = $responseData['choices'][0]['message']['content'];
+$aiParsed = json_decode($aiResponseJson, true);
+
+// Model má vracet validní JSON (vynucujeme přes response_format), ale kdyby
+// přesto přišel rozbitý řetězec, neposílej ho do Reactu – ten by ho jen
+// zobrazil jako nesmysl. Vrať čitelnou chybu.
+if (json_last_error() !== JSON_ERROR_NONE || !is_array($aiParsed)) {
+    error_log('ai-api.php: nevalidní JSON od OpenAI: ' . substr((string)$aiResponseJson, 0, 500));
+    echo json_encode(["error" => "AI odpověď se nepodařilo zpracovat. Zkuste to prosím znovu."]);
+    exit();
+}
+
+if (!isset($aiParsed['reply'])) {
+    error_log('ai-api.php: v odpovědi chybí klíč "reply"');
+    echo json_encode(["error" => "AI vrátila neúplnou odpověď. Zkuste to prosím znovu."]);
+    exit();
+}
+
+// --- Sanitace akce ----------------------------------------------------
+// Model může vrátit `akce`, kterou frontend provede (předvyplní formulář /
+// odscrolluje / ukáže kartu). Nikdy nevěř tomu, co přišlo – whitelist typů i hodnot.
+$akce = null;
+if (isset($aiParsed['akce']) && is_array($aiParsed['akce'])) {
+    $typ = $aiParsed['akce']['typ'] ?? '';
+    $packageIds = array_column($kb['packages'] ?? [], 'id');
+    $sekce = ['cenik', 'kontakt', 'faq', 'reference', 'tvorba', 'technologie', 'connect'];
+
+    if ($typ === 'predvypln_formular'
+        && in_array($aiParsed['akce']['balicek'] ?? '', $packageIds, true)) {
+        $akce = ['typ' => 'predvypln_formular', 'balicek' => $aiParsed['akce']['balicek']];
+    } elseif ($typ === 'prejdi_na'
+        && in_array($aiParsed['akce']['sekce'] ?? '', $sekce, true)) {
+        $akce = ['typ' => 'prejdi_na', 'sekce' => $aiParsed['akce']['sekce']];
+    } elseif ($typ === 'odhad_ceny'
+        && in_array($aiParsed['akce']['balicek'] ?? '', $packageIds, true)) {
+        $akce = [
+            'typ' => 'odhad_ceny',
+            'balicek' => $aiParsed['akce']['balicek'],
+            'cena' => mb_substr(trim((string)($aiParsed['akce']['cena'] ?? '')), 0, 60),
+            'zduvodneni' => mb_substr(trim((string)($aiParsed['akce']['zduvodneni'] ?? '')), 0, 400),
+        ];
+    } elseif ($typ === 'navrhnout_poptavku') {
+        // Návrh leadu z chatu. Odeslání dělá až návštěvník tlačítkem ve frontendu
+        // (POST na send-email.php, který má vlastní validaci + rate limit);
+        // tady jen očistíme pole.
+        $a = $aiParsed['akce'];
+        $jmeno = trim((string)($a['jmeno'] ?? ''));
+        $email = trim((string)($a['email'] ?? ''));
+        $shrnuti = trim((string)($a['shrnuti'] ?? ''));
+        $telefon = trim((string)($a['telefon'] ?? ''));
+        $balicek = in_array($a['balicek'] ?? '', $packageIds, true) ? $a['balicek'] : '';
+
+        if ($jmeno !== '' && filter_var($email, FILTER_VALIDATE_EMAIL) && $shrnuti !== '') {
+            $akce = [
+                'typ' => 'navrhnout_poptavku',
+                'jmeno' => mb_substr($jmeno, 0, 100),
+                'email' => mb_substr($email, 0, 254),
+                'telefon' => mb_substr($telefon, 0, 40),
+                'balicek' => $balicek,
+                'shrnuti' => mb_substr($shrnuti, 0, 2000),
+            ];
+        }
+    }
+}
+
+// Zápis do databáze (log konverzace). Selhání logu nesmí shodit odpověď.
+$dbLogText = $aiParsed['reply'];
+
+try {
+    $pdo = new PDO("mysql:host=$db_host;dbname=$db_name;charset=utf8", $db_user, $db_pass);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    $stmt = $pdo->prepare("INSERT INTO ai_chat_logs (user_message, ai_response) VALUES (:umsg, :aresp)");
+    $stmt->execute([
+        ':umsg' => $userInput,
+        ':aresp' => $dbLogText
+    ]);
+} catch (PDOException $e) {
+    error_log('ai-api.php: logování do DB selhalo: ' . $e->getMessage());
+}
+
+// Odeslání odpovědi zpět do Reactu – přeskládaný objekt se sanitovanou akcí.
+echo json_encode(['reply' => $aiParsed['reply'], 'akce' => $akce], JSON_UNESCAPED_UNICODE);
 ?>

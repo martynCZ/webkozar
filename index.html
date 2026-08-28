@@ -80,50 +80,13 @@
         "opens": "09:00",
         "closes": "17:00"
       },
-      "hasOfferCatalog": {
-        "@type": "OfferCatalog",
-        "name": "Tvorba webových stránek",
-        "itemListElement": [
-          {
-            "@type": "Offer",
-            "itemOffered": { "@type": "Service", "name": "Základní web", "description": "Ideální pro malé projekty a osobní weby." },
-            "price": "10000",
-            "priceCurrency": "CZK",
-            "priceSpecification": {
-              "@type": "PriceSpecification",
-              "price": "10000",
-              "priceCurrency": "CZK",
-              "valueAddedTaxIncluded": false
-            }
-          },
-          {
-            "@type": "Offer",
-            "itemOffered": { "@type": "Service", "name": "Standardní web", "description": "Nejoblíbenější volba pro firmy." },
-            "price": "15000",
-            "priceCurrency": "CZK",
-            "priceSpecification": {
-              "@type": "PriceSpecification",
-              "price": "15000",
-              "priceCurrency": "CZK",
-              "valueAddedTaxIncluded": false
-            }
-          },
-          {
-            "@type": "Offer",
-            "itemOffered": { "@type": "Service", "name": "Web na míru", "description": "Komplexní řešení pro velké projekty." },
-            "price": "25000",
-            "priceCurrency": "CZK",
-            "priceSpecification": {
-              "@type": "PriceSpecification",
-              "price": "25000",
-              "priceCurrency": "CZK",
-              "valueAddedTaxIncluded": false
-            }
-          }
-        ]
-      }
+      "hasOfferCatalog": { "@type": "OfferCatalog", "@id": "https://webkozar.cz/#offercatalog" }
     }
     </script>
+
+    <!-- OfferCatalog (ceník) se generuje z public/ai-knowledge.json v komponentě
+         Pricing.jsx a do HTML se dostane prerenderem – drží se tak v souladu
+         s viditelnými cenami. Přes @id se váže na #business výš. -->
 
     <script type="application/ld+json">
     {
@@ -154,9 +117,8 @@
     }
     </script>
 
-    <!-- FAQPage strukturovaná data se generují z komponenty Faq.jsx (drží se
-         tak samy v souladu s viditelným obsahem) a do HTML se dostanou
-         prerenderem. -->
+    <!-- FAQPage strukturovaná data se generují z komponenty Faq.jsx (z téhož
+         public/ai-knowledge.json) a do HTML se dostanou prerenderem. -->
   </head>
   <body>
     <div id="root"></div>

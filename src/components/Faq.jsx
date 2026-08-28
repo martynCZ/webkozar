@@ -2,33 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronDown } from 'lucide-react';
 import CtaButton from './CtaButton';
-
-const faqs = [
-  {
-    question: 'Kdo jsme a co děláme?',
-    answer: 'Jsme tým webových vývojářů, kteří se specializují na tvorbu moderních a funkčních webových stránek. Naše služby zahrnují kompletní proces od návrhu a vývoje až po SEO optimalizaci a správu webu včetně zajištění webhostingu. S důrazem na kvalitu, inovace a spokojenost zákazníků vytváříme weby, které pomáhají našim klientům vyniknout v online světě.'
-  },
-  {
-    question: 'Jak dlouho trvá tvorba webových stránek?',
-    answer: 'Doba realizace závisí na rozsahu a komplexnosti projektu. Jednoduchý prezentační web můžeme dokončit za 2-3 týdny, komplexnější firemní stránky s vlastním designem obvykle trvají 4-6 týdnů. Aplikace na míru mohou zabrat 8-12 týdnů i více. Vždy se snažíme dodržet dohodnuté termíny a pravidelně vás informujeme o průběhu prací. Pokud potřebujete web urgentně, nabízíme i expresní realizaci.'
-  },
-  {
-    question: 'Co všechno zahrnuje SEO optimalizace?',
-    answer: 'Naše SEO optimalizace je komplexní služba zahrnující technické SEO (rychlost načítání, mobilní optimalizaci, strukturovaná data), on-page optimalizaci (meta tagy, nadpisy, klíčová slova, ALT texty), tvorbu kvalitního obsahu, analýzu konkurence, výzkum klíčových slov a local SEO pro místní firmy. Díky tomu vaše stránky dosáhnou lepších pozic ve vyhledávačích a přivedou více zákazníků.'
-  },
-  {
-    question: 'Kolik stojí vytvoření webových stránek?',
-    answer: 'Cena se odvíjí od typu a rozsahu projektu. Základní prezentační web začíná od 10 000 Kč, profesionální firemní web s vlastním designem od 15 000 Kč a komplexní weby na míru od 25 000 Kč. V ceně je vždy zahrnut responzivní design, základní SEO optimalizace, podpora a zajištění domény a webhostingu. Rádi vám připravíme cenovou nabídku přesně na míru vašim potřebám.'
-  },
-  {
-    question: 'Poskytujete také správu a údržbu webu?',
-    answer: 'Ano! Kromě webhostingu a správy domény nabízíme komplexní servis včetně technické podpory, aktualizace obsahu, pravidelných záloh, bezpečnostních aktualizací, monitoringu výkonu a SEO optimalizace. Můžete si vybrat z několika servisních balíčků podle vašich potřeb - od základní technické podpory až po kompletní správu webu s pravidelnými aktualizacemi.'
-  },
-  {
-    question: 'Budou webové stránky optimalizované pro mobily?',
-    answer: 'Rozhodně ano! Všechny naše weby vytváříme v responzivním designu, což znamená, že perfektně fungují na všech zařízeních - od mobilních telefonů přes tablety až po velké monitory. Mobilní optimalizace je dnes klíčová nejen pro uživatele, ale i pro SEO - Google upřednostňuje mobilně optimalizované stránky.'
-  }
-];
+import { FAQ as faqs } from '../lib/knowledge';
 
 const faqJsonLd = {
   '@context': 'https://schema.org',

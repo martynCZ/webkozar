@@ -1,8 +1,6 @@
-export const PACKAGES = [
-  { value: 'zakladni', label: 'Základní web' },
-  { value: 'standard', label: 'Standardní web' },
-  { value: 'na-miru', label: 'Web na míru' }
-];
+// PACKAGES se odvozují z jediného zdroje znalostí (public/ai-knowledge.json).
+// Re-export tady drží zpětnou kompatibilitu importů `from '../lib/selectPackage'`.
+export { PACKAGES } from './knowledge';
 
 export function selectPackageAndScroll(balicek) {
   if (!balicek) return;
