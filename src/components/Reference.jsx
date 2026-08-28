@@ -8,42 +8,48 @@ const projects = [
     category: 'Katalog, logo',
     description: 'Minimalistický katalog kvalitních oken s důrazem na moderní architekturu',
     image: '/reference/oknajancalek.webp',
-    link:'https://oknajancalek.cz/'
+    link:'https://oknajancalek.cz/',
+    balicek: 'Řešení na míru'
   },
   {
     title: 'ZŠ a MŠ Hladké Životice',
     category: 'Webová stránka',
     description: 'Informační web základní a mateřské školy s důrazem na barvy a přehlednost',
     image: '/reference/zs-ms-hlz.webp',
-    link:'https://www.zshlzivotice.cz/'
+    link:'https://www.zshlzivotice.cz/',
+    balicek: 'Řešení na míru'
   },
   {
     title: 'F.S.C. Bezpečnostní poradenství',
     category: 'Webová stránka',
     description: 'Profesionální firemní prezentace české poradenské společnosti v oblasti bezpečnosti.',
     image: '/reference/fsc.webp',
-    link:'https://fsc-ov.cz/'
+    link:'https://fsc-ov.cz/',
+    balicek: 'Standardní web'
   },
   {
     title: 'BMX Třinec',
     category: 'Webová stránka',
     description: 'Oficiální webová prezentace třineckého bikrosu.',
     image: '/reference/bmxtrinec.webp',
-    link:'https://bmxtrinec.cz/'
+    link:'https://bmxtrinec.cz/',
+    balicek: 'Základní web'
   },
   {
     title: 'Internova Nový Jičín',
     category: 'Webová stránka',
     description: 'Firemní web novojičínské společnosti s přehlednou prezentací nabídky a služeb.',
     image: '/reference/internova.webp',
-    link:'https://internovanj.webkozar.cz/'
+    link:'https://internovanj.webkozar.cz/',
+    balicek: 'Řešení na míru'
   },
   {
     title: 'TJ Niva Hladké Životice',
     category: 'Webová stránka',
     description: 'Oficiální stránky sportovního klubu s aktualitami, výsledky a fotogalerií',
     image: '/reference/niva.webp',
-    link:'https://tjniva.cz/'
+    link:'https://tjniva.cz/',
+    balicek: 'Základní web'
   },
 ];
 const MoreProjects = [
@@ -52,56 +58,64 @@ const MoreProjects = [
     category: 'Webová stránka',
     description: 'Vizitka výrobce laboratorního skla s důrazem na moderní design a přehlednost',
     image: '/reference/baspyr.webp',
-    link:'https://baspyrglass.cz/'
+    link:'https://baspyrglass.cz/',
+    balicek: 'Základní web'
   },
   {
     title: 'Hladké Životice',
     category: 'Webová stránka',
     description: 'Obecní web s důrazem na přehlednost a snadnou orientaci pro občany i návštěvníky.',
     image: '/reference/zivotice.webp',
-    link:'https://www.hladkezivotice.cz/'
+    link:'https://www.hladkezivotice.cz/',
+    balicek: 'Řešení na míru'
   },
   {
     title: 'Autodoprava Jančálek',
     category: 'Webová stránka, logo',
     description: 'Moderní firemní web autodopravy s čistým designem, novým logem a přehlednou nabídkou služeb.',
     image: '/reference/jancalek.webp',
-    link:'https://jancalek.net/'
+    link:'https://jancalek.net/',
+    balicek: 'Základní web'
   },
   {
     title: 'HOLF centrum',
     category: 'Webová stránka',
     description: 'Přehledná prezentace dodavatele pracovních oděvů a OOPP s důrazem na sortiment a osobní přístup.',
     image: '/reference/holfcentrum.webp',
-    link:'https://holfcentrum.cz/'
+    link:'https://holfcentrum.cz/',
+    balicek: 'Základní web'
   },
   {
     title: 'Dopravní koridor Poodří',
     category: 'Webová stránka, logo',
     description: 'Web spolku obcí i s novým logem, srozumitelně informující o dopravních stavbách v regionu.',
     image: '/reference/dpk.webp',
-    link:'https://dopravnikoridorpoodri.cz/'
+    link:'https://dopravnikoridorpoodri.cz/',
+    balicek: 'Standardní web'
   },
   {
     title: 'KADOS',
     category: 'Webová stránka',
     description: 'Firemní web dodavatele stavebních materiálů a CNC obrábění s jasně členěnou nabídkou služeb.',
     image: '/reference/kados.webp',
-    link:'https://kados.cz/'
+    link:'https://kados.cz/',
+    balicek: 'Řešení na míru'
   },
   {
     title: 'Tonysound',
     category: 'Webová stránka',
     description: 'Výrazná prezentace ozvučení a osvětlení akcí, laděná do atmosféry živé hudby.',
     image: '/reference/tonysound.webp',
-    link:'https://tonysound.cz/'
+    link:'https://tonysound.cz/',
+    balicek: 'Základní web'
   },
   {
     title: 'Zemspol Studénka',
     category: 'Webová stránka',
     description: 'Moderní web zemědělské společnosti představující rostlinnou i živočišnou výrobu a bioplynové stanice.',
     image: '/reference/zemspol.webp',
-    link:'https://zemspol-studenka.cz/'
+    link:'https://zemspol-studenka.cz/',
+    balicek: 'Základní web'
   }
 ];
 const showReference = (projekty) =>{
@@ -136,6 +150,17 @@ const showReference = (projekty) =>{
                     </div>
                     </a>
                   </div>
+                  {project.balicek && (
+                    <div className="absolute bottom-3 left-3 opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
+                      <span
+                        className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-black/55 px-3 py-1 text-xs font-medium text-white backdrop-blur-md"
+                        style={{ fontFamily: 'Outfit, sans-serif' }}
+                      >
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#0EC3BF]" />
+                        {project.balicek}
+                      </span>
+                    </div>
+                  )}
                 </div>
                 <div className="p-8">
                   <div className="inline-block mb-3 px-3 py-1 rounded-full bg-[#0EC3BF]/20 border border-[#0EC3BF]/30 text-[#0EC3BF] text-xs font-medium">
