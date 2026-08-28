@@ -2,6 +2,13 @@
 declare(strict_types=1);
 
 $config = require __DIR__ . '/config.php';
+
+// Ladicí vypínač rate limitů (config.php: 'rate_limit_disabled' => true).
+// V běžném provozu musí být false / chybět.
+if (!empty($config['rate_limit_disabled'])) {
+    define('RATE_LIMIT_DISABLED', true);
+}
+
 require __DIR__ . '/_ratelimit.php';
 
 // --- CORS: pouze povolené domény ---

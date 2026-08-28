@@ -25,5 +25,7 @@ dist-ssr
 *.sw?
 .env
 .env.*
+!.env.example
+!deploy/.env.example
 # PHP konfigurace se skutečnými hesly a API klíči
 public/config.php

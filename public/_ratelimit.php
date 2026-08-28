@@ -22,12 +22,21 @@ function rate_limit_client_ip(): string
 /**
  * Vrátí true, pokud je požadavek v limitu, false při jeho překročení.
  *
+ * Globální vypínač: konstanta RATE_LIMIT_DISABLED === true → limity se
+ * přeskočí. Definuje ji endpoint z hodnoty $config['rate_limit_disabled']
+ * (viz ai-api.php / send-email.php). Slouží k ladění na produkci; v běžném
+ * provozu musí být false / chybět.
+ *
  * @param string $bucket         název pravidla (odděluje počítadla různých endpointů)
  * @param int    $maxHits        kolik požadavků se vejde do okna
  * @param int    $windowSeconds  délka okna v sekundách
  */
 function rate_limit_ok(string $bucket, int $maxHits, int $windowSeconds): bool
 {
+    if (defined('RATE_LIMIT_DISABLED') && RATE_LIMIT_DISABLED === true) {
+        return true;
+    }
+
     $key  = hash('sha256', $bucket . '|' . rate_limit_client_ip());
     $file = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'rl_' . $key . '.json';
 
