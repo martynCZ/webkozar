@@ -13,7 +13,7 @@ export function LoadingScreen({ onComplete }) {
   // onAnimationComplete nemusí nikdy proběhnout a návštěvník by zůstal
   // na prázdné obrazovce. Timeout zajistí, že se loader vždy schová.
   useEffect(() => {
-    const t = setTimeout(() => onComplete?.(), reduceMotion ? 300 : 1400);
+    const t = setTimeout(() => onComplete?.(), reduceMotion ? 200 : 600);
     return () => clearTimeout(t);
   }, [onComplete, reduceMotion]);
   return (
@@ -23,7 +23,7 @@ export function LoadingScreen({ onComplete }) {
       aria-label="Načítání stránky"
       initial={{ opacity: 1 }}
       exit={{ opacity: 0, y: -20, filter: "blur(10px)" }} // Animace zmizení
-      transition={{ duration: reduceMotion ? 0 : 0.8, ease: "easeInOut" }}
+      transition={{ duration: reduceMotion ? 0 : 0.4, ease: "easeInOut" }}
     >
       <div className="relative flex items-center justify-center w-32 h-32 mb-8">
         <motion.div
@@ -58,7 +58,7 @@ export function LoadingScreen({ onComplete }) {
           className="h-full bg-gradient-to-r from-[#0EC3BF] to-[#A855F7] shadow-[0_0_10px_rgba(14,195,191,0.8)]"
           initial={{ width: "0%" }}
           animate={{ width: "100%" }}
-          transition={{ duration: reduceMotion ? 0.2 : 0.8, ease: "easeInOut" }}
+          transition={{ duration: reduceMotion ? 0.15 : 0.45, ease: "easeInOut" }}
           onAnimationComplete={onComplete}
         />
       </div>
