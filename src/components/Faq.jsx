@@ -30,6 +30,16 @@ const faqs = [
   }
 ];
 
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+  })),
+};
+
 function Faq() {
   const [openIndex, setOpenIndex] = useState(null);
   const toggleAccordion = (index) => {
@@ -38,6 +48,10 @@ function Faq() {
 
   return (
     <section className="relative py-16 md:py-24 px-4 scroll-mt-24" id="faq" >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       <div className="max-w-[95%] md:max-w-[60%] mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}

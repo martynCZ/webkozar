@@ -1,17 +1,14 @@
-import { useState, lazy, Suspense } from 'react'
+import { useState, lazy, Suspense, useEffect } from 'react'
 import { AnimatePresence, MotionConfig } from 'motion/react'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import './index.css'
 import Header from './components/Header'
 import AnimatedBackground from './components/AnimatedBackground'
-import Hero from './components/Hero'
-import Process from './components/Process'
-import Pricing from './components/Pricing'
 import { LoadingScreen } from './components/LoadingScreen'
-import Technologies from './components/Technologies'
-import { Reference } from './components/Reference'
-import Faq from './components/Faq'
-import Form from './Form'
 import Footer from './components/Footer'
+import Home from './pages/Home'
+import ConnectPage from './pages/ConnectPage'
+import ServiceLanding from './pages/ServiceLanding'
 
 // Nekritické pro první vykreslení – načtou se v samostatných chunkech.
 const LiveChatWidget = lazy(() => import('./components/LiveChatWidget'))
@@ -31,9 +28,32 @@ function introAlreadySeen() {
 // V neaktivní záložce prohlížeč pozastaví animace, takže by se exit animace
 // loaderu nikdy nedohrála a návštěvník by po přepnutí viděl zaseknutý loader.
 function shouldShowIntro() {
+  if (typeof window === 'undefined') return false // prerender – loader do HTML nepatří
   if (introAlreadySeen()) return false
   if (typeof document !== 'undefined' && document.visibilityState === 'hidden') return false
   return true
+}
+
+// Řízení scrollu při navigaci (react-router ho sám neřeší):
+// - je-li v URL kotva (#sekce), odscrolluje na ni (i po dorenderování obsahu),
+// - jinak po změně routy skočí nahoru.
+function ScrollManager() {
+  const { pathname, hash } = useLocation()
+  useEffect(() => {
+    if (hash) {
+      const target = document.querySelector(hash)
+      if (target) {
+        target.scrollIntoView()
+        return
+      }
+      const t = setTimeout(() => {
+        document.querySelector(hash)?.scrollIntoView()
+      }, 300)
+      return () => clearTimeout(t)
+    }
+    window.scrollTo(0, 0)
+  }, [pathname, hash])
+  return null
 }
 
 function App() {
@@ -57,16 +77,19 @@ function App() {
           )}
         </AnimatePresence>
         <AnimatedBackground />
+        <ScrollManager />
         <Header />
-        <main>
-          <Hero />
-          <Process />
-          <Pricing />
-          <Technologies />
-          <Reference />
-          <Faq />
-          <Form />
-        </main>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/connect" element={<ConnectPage />} />
+          <Route
+            path="/tvorba-webovych-stranek-novy-jicin"
+            element={<ServiceLanding variant="tvorba" />}
+          />
+          <Route path="/seo-novy-jicin" element={<ServiceLanding variant="seo" />} />
+          <Route path="/webdesign-novy-jicin" element={<ServiceLanding variant="webdesign" />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
         <Footer />
         <Suspense fallback={null}>
           <LiveChatWidget />

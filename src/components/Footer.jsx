@@ -1,10 +1,22 @@
 import { motion } from 'motion/react';
+import { Link, useLocation } from 'react-router-dom';
 import { ArrowUpRight, Mail, MapPin, Terminal, Github, Linkedin } from 'lucide-react';
 import { NAV_LINKS as navLinks } from '../lib/navLinks';
+import { SERVICE_LINKS } from '../lib/serviceLanding';
 import { openCookieSettings, openCookiePolicy } from '../lib/cookieConsent';
+
+const linkCls = 'hover:text-[#0EC3BF] transition-colors flex items-center gap-1 group';
+const Dash = () => (
+  <span className="w-0 overflow-hidden group-hover:w-4 transition-all duration-300 opacity-0 group-hover:opacity-100">
+    -
+  </span>
+);
 
 function Footer() {
   const currentYear = new Date().getFullYear();
+  const { pathname } = useLocation();
+  const isHome = pathname === '/';
+  const hashHref = (hash) => (isHome ? hash : `/${hash}`);
 
   return (
     <footer className="relative w-full overflow-hidden bg-[#050117] pt-32 pb-10 border-t border-white/5">
@@ -42,18 +54,35 @@ function Footer() {
             </div>
           </div>
 
-          {/* Sloupec 2: Rychlé odkazy (Zabírá 2 sloupce) */}
+          {/* Sloupec 2: Navigace + Služby */}
           <div className="lg:col-span-2 lg:col-start-6">
             <h4 className="text-white font-bold mb-6 text-lg" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>Navigace</h4>
             <ul className="flex flex-col gap-4 text-gray-400" style={{ fontFamily: 'Outfit, sans-serif' }}>
               {navLinks.map((link) => (
                 <li key={link.name}>
-                  <a href={link.href} className="hover:text-[#0EC3BF] transition-colors flex items-center gap-1 group">
-                    <span className="w-0 overflow-hidden group-hover:w-4 transition-all duration-300 opacity-0 group-hover:opacity-100">
-                      -
-                    </span>
-                    {link.name}
-                  </a>
+                  {link.to ? (
+                    <Link to={link.to} className={linkCls}>
+                      <Dash />
+                      {link.name}
+                    </Link>
+                  ) : (
+                    <a href={hashHref(link.hash)} className={linkCls}>
+                      <Dash />
+                      {link.name}
+                    </a>
+                  )}
+                </li>
+              ))}
+            </ul>
+
+            <h4 className="text-white font-bold mt-8 mb-6 text-lg" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>Služby</h4>
+            <ul className="flex flex-col gap-4 text-gray-400" style={{ fontFamily: 'Outfit, sans-serif' }}>
+              {SERVICE_LINKS.map((s) => (
+                <li key={s.to}>
+                  <Link to={s.to} className={linkCls}>
+                    <Dash />
+                    {s.name}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -95,7 +124,7 @@ function Footer() {
                   Pojďme ho společně nakódovat k dokonalosti.
                 </p>
                 <a
-                  href="#kontakt"
+                  href={hashHref('#kontakt')}
                   className="group/cta inline-flex items-center justify-between w-full px-5 py-3 rounded-full bg-white text-[#050117] font-bold transition-all duration-300 hover:bg-gradient-to-r hover:from-[#0EC3BF] hover:to-purple-600 hover:text-white hover:-translate-y-0.5 hover:shadow-[0_0_30px_rgba(14,195,191,0.5)]"
                   style={{ fontFamily: 'Space Grotesk, sans-serif' }}
                 >

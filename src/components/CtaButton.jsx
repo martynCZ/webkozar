@@ -1,17 +1,20 @@
+import { Link } from 'react-router-dom';
+
 /**
  * Primární CTA webu: gradient tyrkys → fialová. Bez zvětšování (scale).
  * Hover efekt = „odlesk": jemný světelný šik jednou přejede zleva doprava
  * přes tlačítko a zmizí. Navíc se zesílí tyrkysová záře.
  *
- * Renderuje <a> (má-li `href`), jinak <button>. Ikony/obsah dej jako children;
- * jsou nad vrstvou odlesku. Skupina se jmenuje `group/cta`, takže vnitřní
- * prvky můžou reagovat přes `group-hover/cta:*` (např. posun šipky).
+ * Renderuje `<Link>` (má-li `to` – navigace v rámci routeru), `<a>` (má-li
+ * `href` – kotva nebo externí odkaz), jinak `<button>`. Ikony/obsah dej jako
+ * children; jsou nad vrstvou odlesku. Skupina se jmenuje `group/cta`, takže
+ * vnitřní prvky můžou reagovat přes `group-hover/cta:*` (např. posun šipky).
  *
  * `compact` = menší varianta do hlavičky. Přes `className` se dá jen přidávat
  * (w-full, mt-auto, text-lg…), ne přepisovat padding/font – na to je `compact`.
  */
-function CtaButton({ href, children, className = '', compact = false, ...props }) {
-  const size = compact ? 'px-6 py-2.5 font-medium' : 'px-8 py-4 font-semibold';
+function CtaButton({ href, to, children, className = '', compact = false, ...props }) {
+  const size = compact ? 'px-4 py-2' : 'px-8 py-4 font-semibold';
 
   const cls =
     'group/cta relative isolate overflow-hidden inline-flex items-center justify-center gap-2 ' +
@@ -35,6 +38,14 @@ function CtaButton({ href, children, className = '', compact = false, ...props }
       </span>
     </>
   );
+
+  if (to) {
+    return (
+      <Link to={to} className={cls} {...props}>
+        {inner}
+      </Link>
+    );
+  }
 
   return href ? (
     <a href={href} className={cls} {...props}>
