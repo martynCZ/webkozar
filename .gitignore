@@ -25,7 +25,15 @@ dist-ssr
 *.sw?
 .env
 .env.*
-!.env.example
-!deploy/.env.example
+
 # PHP konfigurace se skutečnými hesly a API klíči
 public/config.php
+
+# --- Interní věci mimo veřejný repozitář -----------------------------------
+# Nasazovací skript (obsahuje logiku k SFTP účtu) a jeho .env
+deploy/
+
+# Interní dokumentace, audity a changelogy – v repu zůstává jen README.md
+/*.md
+!/README.md
+docs/

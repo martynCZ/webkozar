@@ -3,9 +3,10 @@
 > Prezentační web webového studia **webkozar** — tvorba webových stránek, log
 > a SEO optimalizace pro firmy z Nového Jičína, Ostravy a okolí.
 
-Jednostránkový (onepage) marketingový web s důrazem na UI/UX, plynulé
-mikro-interakce a „dark-neon" estetiku s glassmorphismem. K webu patří tenký
-PHP backend na hostingu, který obsluhuje kontaktní formulář a AI chat.
+Marketingový web s důrazem na UI/UX, plynulé mikro-interakce a „dark-neon"
+estetiku s glassmorphismem. Hlavní stránka je onepage, k ní patří několik
+prerenderovaných podstránek a tenký PHP backend na hostingu, který obsluhuje
+kontaktní formulář a AI chat.
 
 Ostrá verze: **[webkozar.cz](https://webkozar.cz/)**
 
@@ -13,35 +14,43 @@ Ostrá verze: **[webkozar.cz](https://webkozar.cz/)**
 
 ## Co web obsahuje
 
-### Sekce stránky
+### Sekce hlavní stránky
 | Sekce | Kotva | Popis |
 |-------|-------|-------|
 | Hero | — | Hlavní sekce: gradientní nadpis, statistiky, animovaný `FluidBlob`, dvě CTA |
-| Proces | `#tvorba` | Čtyři kroky spolupráce (odhad ceny → analýza → návrh → předání) |
-| Ceník | `#cenik` | Tři balíčky (Základní / Standardní / Web na míru) + **AI průvodce výběrem** |
+| Proces | `#tvorba` | Kroky spolupráce (odhad ceny → analýza → návrh → předání) |
+| Ceník | `#cenik` | Balíčky (Základní / Standardní / Web na míru) + spuštění AI chatu s odhadem ceny |
 | Technologie | `#technologie` | Přehled používaných nástrojů |
-| Reference | `#reference` | Mřížka hotových projektů; úvodem 6, zbytek za „Zobrazit více"; název je odkaz na web klienta |
+| Reference | `#reference` | Mřížka hotových projektů; úvodem 6, zbytek za „Zobrazit více" |
 | FAQ | `#faq` | Časté dotazy (accordion) |
 | Kontakt | `#kontakt` | Kontaktní formulář + kontaktní a fakturační údaje |
 
+### Podstránky
+- `/connect` — prezentace produktu **Webkozar Connect** (`ConnectPage`)
+- Landing pages pro službu + lokalitu (`ServiceLanding`, konfigurace
+  v `src/lib/serviceLanding.js`)
+
+Všechny se při buildu prerenderují do statického HTML (`scripts/prerender.mjs`),
+takže roboti i sdílecí náhledy dostanou hotový obsah včetně meta tagů.
+
 ### Interaktivní prvky
-- **AI průvodce výběrem** (`AIChatbot`) — v ceníku; podle popisu projektu doporučí
-  balíček a odhadne cenu, výsledek předvyplní do formuláře
-- **Plovoucí AI chat** (`LiveChatWidget`) — bublina v rohu, odpovídá na dotazy návštěvníků
+- **AI chat** (`LiveChatWidget`) — plovoucí bublina; odpovídá na dotazy a umí
+  předvyplnit formulář, odscrollovat na sekci, doporučit balíček s odhadem ceny
+  nebo navrhnout odeslání poptávky
 - **Lišta souhlasu s cookies** (`CookieConsent` + `CookiePolicy`) — nezbytné /
-  analytické cookies, Google Consent Mode v2, uložení do `localStorage`;
-  modal se zásadami zpracování otevíratelný z lišty i patičky
-- **Úvodní loader** (`LoadingScreen`) — krátká animace (~0,8 s), zobrazí se jen
-  jednou za návštěvu (`sessionStorage`), na skryté záložce se přeskočí
-- **Pozadí** (`AnimatedBackground`) — statické radiální gradienty; na `md+`
-  jedna vrstva s pomalým `transform` driftem, na mobilu i při „omezit pohyb" bez animace
+  analytické cookies, Google Consent Mode v2, uložení do `localStorage`
+- **Úvodní loader** (`LoadingScreen`) — krátká animace, jen jednou za návštěvu
+  (`sessionStorage`), na skryté záložce se přeskočí
+- **Pozadí** (`AnimatedBackground`) — fixní gradientová vrstva s blur „bloby";
+  na mobilu i při „omezit pohyb" bez animace
 
 ### Komunikace mezi sekcemi
 Sekce spolu nemluví přes globální stav, ale přes `CustomEvent`:
 
 | Event | Odesílá | Poslouchá |
 |-------|---------|-----------|
-| `prefillPackage` | ceník, AI průvodce | formulář (předvyplní balíček + odscrolluje) |
+| `prefillPackage` | ceník, AI chat | formulář (předvyplní balíček + odscrolluje) |
+| `openChat` | ceník | plovoucí AI chat |
 | `openCookieSettings` | patička | lišta cookies |
 | `openCookiePolicy` | patička, lišta cookies | modal se zásadami |
 
@@ -51,14 +60,14 @@ Sekce spolu nemluví přes globální stav, ale přes `CustomEvent`:
 
 | Oblast | Technologie |
 |--------|-------------|
-| Frontend | [React 19](https://react.dev/) |
-| Build & dev server | [Vite 7](https://vitejs.dev/) |
+| Frontend | [React 19](https://react.dev/) + [React Router](https://reactrouter.com/) |
+| Build & dev server | [Vite 7](https://vitejs.dev/) + vlastní prerender (SSR build) |
 | Stylování | [Tailwind CSS v4](https://tailwindcss.com/) (`@tailwindcss/vite`) |
 | Animace | [Motion](https://motion.dev/) (`motion/react`) |
 | Ikony | [Lucide React](https://lucide.dev/) |
-| Písma | [Fontsource](https://fontsource.org/) — Space Grotesk (nadpisy), Outfit (text); váhy 400/500/600/700, subsety latin + latin-ext |
+| Písma | [Fontsource](https://fontsource.org/) — Space Grotesk (nadpisy), Outfit (text) |
 | Backend | PHP 8+ (na hostingu) |
-| AI | OpenAI API (`gpt-4o-mini`) přes serverovou proxy |
+| AI | OpenAI API přes serverovou proxy |
 | Databáze | MySQL (log konverzací AI chatu) |
 | Návrh | [Figma](https://www.figma.com/) |
 
@@ -68,52 +77,43 @@ Sekce spolu nemluví přes globální stav, ale přes `CustomEvent`:
 
 ```
 webkozar/
-├── index.html                 # meta tagy, Open Graph, Twitter card, JSON-LD (ProfessionalService + FAQPage)
+├── index.html                  # meta tagy, Open Graph, Twitter card, JSON-LD
 ├── vite.config.js
 ├── eslint.config.js
-├── DEPLOY.md                   # postup nasazení (ruční SFTP/FTPS)
-├── AUDIT.md                    # kompletní audit webu s prioritami a stavem
-├── CLAUDE.md                   # pokyny pro AI asistenta
+├── scripts/prerender.mjs       # build → statické HTML pro každou routu
 │
 ├── public/                     # kopíruje se do dist/ beze změny
-│   ├── send-email.php          # příjem kontaktního formuláře → mail()
-│   ├── ai-api.php              # proxy na OpenAI (režimy 'wizard' / 'chat') + log do MySQL
-│   ├── _ratelimit.php          # sdílený rate-limiting helper (stav v temp souborech)
+│   ├── send-email.php          # příjem kontaktního formuláře
+│   ├── ai-api.php              # proxy na OpenAI + log do MySQL
+│   ├── _ratelimit.php          # sdílený rate-limiting helper
+│   ├── _smtp.php               # odeslání e-mailu přes autentizované SMTP
+│   ├── ai-knowledge.json       # znalosti AI + zdroj ceníku a FAQ pro web
 │   ├── config.example.php      # vzor konfigurace
-│   ├── config.php              # SKUTEČNÉ klíče a hesla – NENÍ v gitu (.gitignore)
-│   ├── robots.txt              # Allow: /
-│   ├── sitemap.xml
-│   ├── logos/                  # logo, favicon, og-image
-│   └── reference/              # náhledy projektů (.webp, max 900 px)
+│   ├── .htaccess               # redirecty, SPA fallback, hlavičky, cache
+│   ├── robots.txt / sitemap.xml
+│   ├── logos/ · reference/ · connect/
 │
 └── src/
-    ├── main.jsx                # vstupní bod
-    ├── App.jsx                 # skládá sekce onepage, MotionConfig, lazy modaly
-    ├── index.css               # Tailwind, import fontů, keyframes, prefers-reduced-motion
+    ├── main.jsx                # vstupní bod (router)
+    ├── entry-server.jsx        # vstupní bod pro prerender
+    ├── App.jsx                 # layout, MotionConfig, lazy modaly
+    ├── index.css               # Tailwind, fonty, keyframes, prefers-reduced-motion
     ├── Form.jsx                # kontaktní sekce (formulář + údaje)
-    ├── components/
-    │   ├── Header.jsx          # plovoucí skleněná navigace + mobilní menu
-    │   ├── Hero.jsx            # hlavní sekce
-    │   ├── FluidBlob.jsx       # animovaný „blob" v Hero
-    │   ├── Process.jsx         # kroky spolupráce
-    │   ├── Pricing.jsx         # ceník + spouštěč AI průvodce
-    │   ├── AIChatbot.jsx       # modal: AI průvodce výběrem balíčku (lazy)
-    │   ├── CustomSelect.jsx    # vlastní dropdown výběru balíčku ve formuláři
-    │   ├── Technologies.jsx    # sekce technologií
-    │   ├── Reference.jsx       # mřížka referencí + „Zobrazit více"
-    │   ├── Faq.jsx             # accordion častých dotazů
-    │   ├── Footer.jsx          # patička: navigace, kontakt, CTA, cookies
-    │   ├── CtaButton.jsx       # sdílené primární tlačítko (gradient + efekt odlesku)
-    │   ├── LiveChatWidget.jsx  # plovoucí AI chat (lazy)
-    │   ├── CookieConsent.jsx   # lišta souhlasu s cookies (lazy)
-    │   ├── CookiePolicy.jsx    # modal se zásadami zpracování cookies (lazy)
-    │   ├── LoadingScreen.jsx   # úvodní loader
-    │   └── AnimatedBackground.jsx  # fixní gradientové pozadí
-    └── lib/
+    ├── pages/                  # Home, ConnectPage, ServiceLanding
+    ├── components/             # sekce a UI prvky (viz výše)
+    └── lib/                    # sdílený kód bez UI
         ├── navLinks.js         # položky navigace (Header + Footer)
-        ├── selectPackage.js    # balíčky + předvyplnění formuláře přes CustomEvent
-        └── cookieConsent.js    # logika souhlasu (localStorage, verzování, Consent Mode)
+        ├── knowledge.js        # PACKAGES + FAQ z ai-knowledge.json
+        ├── selectPackage.js    # předvyplnění formuláře přes CustomEvent
+        ├── openChat.js         # otevření AI chatu odkudkoli
+        ├── cookieConsent.js    # logika souhlasu (localStorage, Consent Mode)
+        ├── analytics.js        # GA4 se spouští až po souhlasu
+        ├── seo.js · serviceLanding.js · usePageMeta.js
+        └── useBodyScrollLock.js · useFocusTrap.js
 ```
+
+> Ceník a FAQ se udržují **jen v `public/ai-knowledge.json`** — web, JSON-LD
+> i systémový prompt AI z něj čtou, takže se obsah nerozchází.
 
 ---
 
@@ -122,27 +122,23 @@ webkozar/
 Soubory v `public/*.php` běží na hostingu (Vite je zkopíruje do `dist/`).
 
 ### `send-email.php` — kontaktní formulář
-Přijme JSON, zvaliduje (jméno, e-mail, zpráva, délky), odešle přes PHP `mail()`
-na `mail_to` z konfigurace. Ochrany:
+Přijme JSON, zvaliduje (jméno, e-mail, zpráva, délky) a odešle na `mail_to`
+z konfigurace — přes autentizované SMTP, když je nastavené, jinak PHP `mail()`.
+Ochrany:
 
-- **CORS** — hlavička `Access-Control-Allow-Origin` jen pro domény z `allowed_origins`
+- **CORS** — `Access-Control-Allow-Origin` jen pro domény z `allowed_origins`
 - **Honeypot** — skryté pole `website`; když je vyplněné, tváří se úspěšně, ale nic neodešle
-- **Časový zámek** — odeslání do 2,5 s po načtení formuláře (`renderedAt`) = bot
+- **Časový zámek** — odeslání příliš brzy po načtení formuláře (`renderedAt`) = bot
 - **Rate limit** — max 5 odeslání za hodinu z jedné IP
 - **Ochrana proti header injection** — do hlaviček jde jen ověřený e-mail bez CR/LF
 
-### `ai-api.php` — AI chat / průvodce
-Serverová proxy na OpenAI Chat Completions (`gpt-4o-mini`, `response_format: json_object`).
-Dva režimy podle pole `type` v požadavku:
-
-| `type` | Volá | Odpověď (JSON klíče) |
-|--------|------|----------------------|
-| `wizard` | `AIChatbot.jsx` | `doporuceni`, `cena`, `balicek` |
-| `chat` | `LiveChatWidget.jsx` | `reply` |
-
-Systémový prompt obsahuje znalosti o firmě a ceníku. Konverzace se loguje do
-tabulky `ai_chat_logs` (MySQL). Ochrany: CORS jako výše + **rate limit**
-(burst 3 / 20 s a 15 / hodinu z jedné IP) — CORS totiž nechrání přímé volání
+### `ai-api.php` — AI chat
+Serverová proxy na OpenAI Chat Completions (`response_format: json_object`).
+Systémový prompt se skládá z `ai-knowledge.json` (znalosti, tón, refusal,
+few-shot). Odpověď je `{ reply, akce }`; `akce` server whitelistuje a frontend
+podle ní předvyplní formulář, odscrolluje, ukáže odhad ceny nebo nabídne
+odeslání poptávky. Konverzace se logují do MySQL. Ochrany: CORS jako výše +
+**rate limit** (burst i hodinový strop) — CORS totiž nechrání přímé volání
 přes `curl`, jen prohlížeč.
 
 ### `_ratelimit.php`
@@ -155,28 +151,13 @@ zapisovatelný, limiter **propouští** (fail-open), aby neblokoval legitimní p
 ## Konfigurace
 
 Na serveru musí ve stejné složce jako `ai-api.php` ležet **`config.php`**
-se skutečnými hodnotami. Vzor je `config.example.php`:
+se skutečnými hodnotami. Vzor i s komentáři je
+[`public/config.example.php`](./public/config.example.php) — zkopíruj ho jako
+`config.php` a doplň OpenAI klíč, přístup k databázi, e-mailové adresy,
+případně SMTP a povolené originy.
 
-```php
-<?php
-return [
-    'openai_api_key' => 'sk-...',
-    'db_host'   => 'localhost',
-    'db_name'   => 'webkozar_ai',
-    'db_user'   => 'webkozar',
-    'db_pass'   => '',
-    'mail_to'   => 'info@webkozar.cz',
-    'mail_from' => 'info@webkozar.cz',
-    'allowed_origins' => [
-        'https://webkozar.cz',
-        'https://www.webkozar.cz',
-    ],
-];
-```
-
-`config.php` je v `.gitignore` — **nikdy ho necommituj** ani neposílej do
-repozitáře. Při ručním nahrávání `dist/` na server ho **nepřepisuj**
-(v buildu je jen kopie vzoru).
+`config.php` je v `.gitignore` — **nikdy ho necommituj**. Při nahrávání `dist/`
+na server ho nepřepisuj kopií vzoru.
 
 ---
 
@@ -194,7 +175,7 @@ cd webkozar
 npm install
 
 npm run dev       # vývojový server (http://localhost:5173)
-npm run build     # produkční build do dist/
+npm run build     # produkční build do dist/ (vč. prerenderu podstránek)
 npm run preview   # náhled produkčního buildu
 npm run lint      # ESLint
 ```
@@ -206,35 +187,22 @@ npm run lint      # ESLint
 
 ## Nasazení
 
-Web běží na produkci a nahrává se **ručně přes SFTP / FTPS** (žádný skript
-v repozitáři).
-
 1. `npm run build` → složka `dist/` (HTML, JS, CSS, obrázky + PHP z `public/`)
-2. Obsah `dist/` nahrát na webroot, **vynechat `config.php`** (na serveru je ostrá verze)
+2. Obsah `dist/` nahrát na webroot, **`config.php` na serveru nepřepisovat**
 3. Kontrola: web běží, `robots.txt` má `Allow: /`, `sitemap.xml` se zobrazí,
    testovací zpráva z formuláře dorazí, AI chat odpoví
-
-Podrobnosti a poznámky k SEO (301 redirecty, Search Console, rich results) jsou
-v [`DEPLOY.md`](./DEPLOY.md).
 
 ---
 
 ## SEO a metadata
 
-`index.html` obsahuje:
-
-- `lang="cs"`, `<link rel="canonical">`, meta description
+- `lang="cs"`, `<link rel="canonical">`, meta description pro každou routu
+  (`src/lib/seo.js` + `usePageMeta.js`, zapečené prerenderem do HTML)
 - **Open Graph** + **Twitter card** (obrázek `logos/og-image.jpg`, 1200 × 630)
-- **JSON-LD**:
-  - `ProfessionalService` — název, adresa, oblast působení (Nový Jičín, Ostrava,
-    Moravskoslezský kraj), otevírací doba, ceník služeb (`hasOfferCatalog`)
-  - `FAQPage` — 6 otázek a odpovědí
-
-`public/robots.txt` povoluje indexaci, `public/sitemap.xml` obsahuje homepage.
-
-> ⚠️ JSON-LD s FAQ a ceníkem je v `index.html` **napevno** a duplikuje obsah
-> z `Faq.jsx` a `Pricing.jsx`. Při změně otázek nebo cen na webu je nutné
-> upravit i strukturovaná data, jinak vznikne „structured data mismatch".
+- **JSON-LD** — `ProfessionalService` (název, adresa, oblast působení,
+  otevírací doba), `OfferCatalog` s ceníkem a `FAQPage`; ceník i FAQ se generují
+  z `ai-knowledge.json`, takže nemůžou vzniknout rozejité strukturované údaje
+- `public/robots.txt` povoluje indexaci, `public/sitemap.xml` obsahuje všechny routy
 
 ---
 
@@ -242,22 +210,11 @@ v [`DEPLOY.md`](./DEPLOY.md).
 
 - Veškerý pohyb respektuje `prefers-reduced-motion` — `<MotionConfig reducedMotion="user">`
   v `App.jsx` + CSS `@media` v `index.css`
-- Nekritické komponenty (`AIChatbot`, `LiveChatWidget`, `CookieConsent`,
-  `CookiePolicy`) se načítají přes `React.lazy` v samostatných chunkech
+- Nekritické komponenty (`LiveChatWidget`, `CookieConsent`, `CookiePolicy`)
+  se načítají přes `React.lazy` v samostatných chunkech
+- Chyby vykreslení odchytává `ErrorBoundary`
 - Fonty se načítají jen v potřebných vahách a subsetech
 - Náhledy referencí jsou webp do 900 px šířky
-
-Otevřené body a další možná vylepšení jsou v [`AUDIT.md`](./AUDIT.md).
-
----
-
-## Dokumentace
-
-| Soubor | Obsah |
-|--------|-------|
-| [`AUDIT.md`](./AUDIT.md) | Kompletní audit webu (bezpečnost, výkon, SEO, přístupnost, responzivita, UX, kód, backend, deploy) s prioritami a stavem |
-| [`DEPLOY.md`](./DEPLOY.md) | Postup nasazení na produkci |
-| [`CLAUDE.md`](./CLAUDE.md) | Pokyny pro práci s AI asistentem nad tímto repozitářem |
 
 ---
 
