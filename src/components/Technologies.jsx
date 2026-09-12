@@ -106,7 +106,7 @@ function Technologies() {
             className="text-4xl md:text-5xl font-bold text-white mb-4"
             style={{ fontFamily: 'Space Grotesk, sans-serif' }}
           >
-            Používáme{' '}
+            Technologie, na kterých{' '}
             <motion.span
               className="bg-gradient-to-r from-[#0EC3BF] via-purple-500 to-[#0EC3BF] bg-[length:200%_auto] bg-clip-text text-transparent"
               animate={{ backgroundPosition: ["0% center", "-200% center"] }}
@@ -116,11 +116,11 @@ function Technologies() {
                 ease: "linear"
               }}
             >
-              nejmodernější technologie
+              weby stavíme
             </motion.span>
           </h2>
-          <p className="text-xl text-gray-400">
-            Profesionální nástroje pro špičkové výsledky
+          <p className="text-xl text-gray-400 max-w-2xl mx-auto" style={{ fontFamily: 'Outfit, sans-serif' }}>
+            Weby na míru stavíme na Reactu, Vite a Tailwindu — rychlé načítání a snadné SEO. Kde si chcete web spravovat sami, sáhneme po WordPressu s tématem Avada. Rychlost a optimalizaci pro vyhledávače řešíme u obojího.
           </p>
         </motion.div>
 

@@ -48,7 +48,7 @@ function Faq() {
             </motion.span>
           </h2>
           <p className="text-xl text-gray-400">
-            Vše, co potřebujete vědět před začátkem spolupráce
+            Ceny, termíny, SEO i správa webu — nejčastější dotazy před začátkem spolupráce
           </p>
         </motion.div>
 

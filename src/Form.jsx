@@ -3,13 +3,15 @@ import { motion } from 'motion/react';
 import { Check, Mail, Phone, MapPin, Clock } from 'lucide-react';
 import CustomSelect from './components/CustomSelect';
 import CtaButton from './components/CtaButton';
+import { openPrivacyPolicy } from './lib/cookieConsent';
 
 function Form() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     balicek: '',
-    message: ''
+    message: '',
+    consent: false
   });
   // Stav odeslání: 'idle' | 'sending' | 'success' | 'error'
   const [status, setStatus] = useState('idle');
@@ -50,7 +52,7 @@ function Form() {
         // Potvrzení necháváme zobrazené natrvalo (do dalšího odeslání) –
         // po 3 s mizející hláška se dala snadno minout.
         setStatus('success');
-        setFormData({ name: '', email: '', balicek: '', message: '' });
+        setFormData({ name: '', email: '', balicek: '', message: '', consent: false });
       } else {
         setStatus('error');
       }
@@ -65,12 +67,12 @@ function Form() {
       <div className="max-w-[95%] md:max-w-[80%] mx-auto">
         <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="text-center mb-20">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
-            Pojďme vytvořit něco{' '}
+            Nezávazná poptávka webu{' '}
             <motion.span className="bg-gradient-to-r from-[#0EC3BF] via-purple-500 to-[#0EC3BF] bg-[length:200%_auto] bg-clip-text text-transparent" animate={{ backgroundPosition: ["0% center", "-200% center"] }} transition={{ duration: 4, repeat: Infinity, ease: "linear" }}>
-              úžasného
+              Nový Jičín a Ostrava
             </motion.span>
           </h2>
-          <p className="text-xl text-gray-400">Kontaktujte nás a my vám pomůžeme s vaším projektem</p>
+          <p className="text-xl text-gray-400">Ozvěte se a připravíme odhad ceny zdarma</p>
         </motion.div>
 
         <div className="grid md:grid-cols-2 gap-8 items-stretch">
@@ -107,6 +109,29 @@ function Form() {
 
                 <label htmlFor="form-message" className='text-sm text-gray-300 mt-4 block font-medium'>Zpráva</label>
                 <textarea id="form-message" required value={formData.message} onChange={e => setFormData({ ...formData, message: e.target.value })} placeholder="Popište svůj projekt..." className="mt-2 w-full mb-6 px-4 py-3 rounded-2xl bg-white/5 border border-white/10 text-white focus:ring-2 focus:ring-[#0EC3BF]/50 outline-none h-32 resize-none flex-1" />
+
+                {/* GDPR – souhlas se zpracováním osobních údajů (povinný) */}
+                <label htmlFor="form-consent" className="flex items-start gap-3 mb-6 text-sm text-gray-400 cursor-pointer">
+                  <input
+                    id="form-consent"
+                    type="checkbox"
+                    required
+                    checked={formData.consent}
+                    onChange={e => setFormData({ ...formData, consent: e.target.checked })}
+                    className="mt-0.5 h-4 w-4 shrink-0 rounded border-white/20 bg-white/5 accent-[#0EC3BF] focus:ring-2 focus:ring-[#0EC3BF]/50 outline-none cursor-pointer"
+                  />
+                  <span>
+                    Souhlasím se zpracováním osobních údajů za účelem vyřízení této poptávky. Podrobnosti v{' '}
+                    <button
+                      type="button"
+                      onClick={openPrivacyPolicy}
+                      className="text-[#0EC3BF] hover:underline cursor-pointer"
+                    >
+                      zásadách ochrany osobních údajů
+                    </button>
+                    .
+                  </span>
+                </label>
 
                 {status === 'error' && (
                   <p role="alert" className="mb-4 px-4 py-3 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-300 text-sm">

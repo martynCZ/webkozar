@@ -17,6 +17,15 @@ return [
     'db_pass' => '',
     'mail_to'  => 'info@webkozar.cz',
     'mail_from' => 'info@webkozar.cz',
+    // Odesílání formuláře přes autentizované SMTP (lepší doručitelnost než mail()).
+    // Vyplň smtp_host + smtp_user pro aktivaci; jinak se použije PHP mail().
+    'smtp_host'      => '',            // např. 'smtp.svethostingu.cz'
+    'smtp_port'      => 587,           // 587 = STARTTLS, 465 = implicitní TLS
+    'smtp_user'      => '',            // obvykle celá e-mailová adresa schránky
+    'smtp_pass'      => '',            // heslo ke schránce
+    'smtp_secure'    => 'tls',         // 'tls' (STARTTLS) | 'ssl' | '' (bez šifrování)
+    'smtp_from'      => 'info@webkozar.cz',  // adresa v hlavičce From (musí sedět s doménou schránky)
+    'smtp_from_name' => 'webkozar',
     // Povolené originy pro CORS (bez lomítka na konci)
     'allowed_origins' => [
         'https://webkozar.cz',

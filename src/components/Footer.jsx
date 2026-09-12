@@ -150,7 +150,7 @@ function Footer() {
                 className="text-gray-400 text-sm hover:text-[#0EC3BF] transition-colors cursor-pointer"
                 style={{ fontFamily: 'Outfit, sans-serif' }}
               >
-                Zásady cookies
+                Ochrana osobních údajů
               </button>
               <button
                 type="button"

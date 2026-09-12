@@ -131,7 +131,7 @@ function Pricing() {
             className="text-4xl md:text-5xl font-bold text-white mb-4"
             style={{ fontFamily: 'Space Grotesk, sans-serif' }}
           >
-            Ceník vytvoření{' '}
+            Ceník tvorby{' '}
             <motion.span
               className="bg-gradient-to-r from-[#0EC3BF] via-purple-500 to-[#0EC3BF] bg-[length:200%_auto] bg-clip-text text-transparent"
               animate={{ backgroundPosition: ['0% center', '-200% center'] }}
@@ -141,7 +141,7 @@ function Pricing() {
             </motion.span>
           </h2>
           <p className="text-xl text-gray-400">
-            Vyberte si balíček, který nejlépe vyhovuje vašim potřebám
+            Ceny webu od 10 000 Kč — co je v každém balíčku
           </p>
         </motion.div>
         <div className="relative">
@@ -163,7 +163,7 @@ function Pricing() {
           Nevíte si rady s výběrem?
         </h3>
         <p className="text-gray-400 mb-4">
-          Využijte našeho AI chatbota, který vám pomůže najít ten pravý balíček pro vaše potřeby!
+          Zeptejte se našeho AI asistenta — podle popisu projektu vám poradí ten pravý balíček.
         </p>
         <div className="">
           <CtaButton onClick={openPruvodce}>Zeptat se AI asistenta</CtaButton>

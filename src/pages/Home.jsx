@@ -1,4 +1,5 @@
 import Hero from '../components/Hero'
+import About from '../components/About'
 import Process from '../components/Process'
 import Pricing from '../components/Pricing'
 import Technologies from '../components/Technologies'
@@ -15,6 +16,7 @@ function Home() {
   return (
     <main id="obsah">
       <Hero />
+      <About />
       <Process />
       <Pricing />
       <Technologies />

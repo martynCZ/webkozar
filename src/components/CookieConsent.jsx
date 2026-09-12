@@ -126,7 +126,7 @@ function CookieConsent() {
                         onClick={() => setShowPolicy(true)}
                         className="text-[#0EC3BF] hover:underline cursor-pointer"
                       >
-                        Zásady zpracování cookies
+                        Zásady ochrany osobních údajů
                       </button>
                     </p>
 

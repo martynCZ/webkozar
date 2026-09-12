@@ -12,7 +12,7 @@ import RequestLifecycle from './RequestLifecycle';
 
 /**
  * Sekce „Webkozar Connect" na domovské stránce — úderný teaser klientského
- * portálu studia. Popsané výhradně z pohledu zákazníka. Podrobný rozpis funkcí
+ * portálu webkozar. Popsané výhradně z pohledu zákazníka. Podrobný rozpis funkcí
  * a screenshoty jsou na samostatné stránce `/connect` (komponenta `ConnectPage`).
  */
 const CONNECT_PAGE = '/connect';

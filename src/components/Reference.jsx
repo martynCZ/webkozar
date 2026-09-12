@@ -220,11 +220,11 @@ export function Reference() {
               reference
             </span>
           </h2>
-          <p 
-            className="text-xl text-gray-400"
+          <p
+            className="text-xl text-gray-400 max-w-2xl mx-auto"
             style={{ fontFamily: 'Outfit, sans-serif' }}
           >
-            Projekty, na které jsme hrdí
+            Přes 40 realizací pro firmy, obce, školy a spolky z Novojičínska, Ostravska a celého Moravskoslezského kraje.
           </p>
         </motion.div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">

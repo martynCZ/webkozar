@@ -5,9 +5,9 @@ export const SITE_URL = 'https://webkozar.cz';
 export const OG_IMAGE = `${SITE_URL}/logos/og-image.jpg`;
 
 export const DEFAULT_META = {
-  title: 'Tvorba webových stránek a SEO Nový Jičín | webkozar',
+  title: 'webkozar — tvorba webů, webdesign a SEO | Nový Jičín a Ostrava',
   description:
-    'Tvorba webových stránek, webdesign a SEO optimalizace v Novém Jičíně. Rychlé, moderní weby na míru pro firmy z Nového Jičína, Ostravy a okolí. Nezávazná poptávka zdarma.',
+    'Tvorba webových stránek, webdesign a SEO optimalizace pro firmy z Nového Jičína, Ostravy a okolí. Rychlé, moderní weby na míru i na WordPressu. Odhad ceny zdarma.',
 };
 
 export const PAGE_META = {
@@ -16,7 +16,7 @@ export const PAGE_META = {
   '/connect': {
     title: 'Webkozar Connect — klientský portál ke každému webu | webkozar',
     description:
-      'Ke každému webu od nás dostanete přístup do klientského portálu Webkozar Connect: zadávání úprav, sledování stavu v reálném čase a přehled o fakturaci na jednom místě.',
+      'Klientský portál ke každému webu od nás: zadávání úprav přes šablony, sledování stavu v reálném čase a přehled o fakturaci na jednom místě.',
   },
 
   '/tvorba-webovych-stranek-novy-jicin': {
@@ -26,7 +26,7 @@ export const PAGE_META = {
   },
 
   '/seo-novy-jicin': {
-    title: 'SEO Nový Jičín — SEO optimalizace webu | webkozar',
+    title: 'SEO optimalizace Nový Jičín | webkozar',
     description:
       'SEO optimalizace v Novém Jičíně: technické SEO, on-page, obsah a local SEO, aby vás zákazníci v regionu našli ve vyhledávání. Analýza zdarma, měřitelné výsledky.',
   },

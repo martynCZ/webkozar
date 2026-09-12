@@ -5,9 +5,9 @@ import { COOKIE_CATEGORIES, openCookieSettings } from '../lib/cookieConsent';
 import { useBodyScrollLock } from '../lib/useBodyScrollLock';
 
 /**
- * Zásady zpracování cookies a osobních údajů.
+ * Zásady ochrany osobních údajů a cookies.
  * Web je jednostránkový, proto je dokument řešený jako modální okno,
- * na které se odkazuje z lišty i z patičky.
+ * na které se odkazuje z lišty cookies, z patičky i z kontaktního formuláře.
  */
 function CookiePolicy({ isOpen, onClose }) {
   // Scroll na pozadí zamyká sdílený hook (čítač – snese víc vrstev naráz).
@@ -43,7 +43,7 @@ function CookiePolicy({ isOpen, onClose }) {
           {/* Pozadí zavírá kliknutím; klávesnice má Esc + zavírací „X". */}
           <button
             type="button"
-            aria-label="Zavřít zásady zpracování cookies"
+            aria-label="Zavřít zásady ochrany osobních údajů"
             tabIndex={-1}
             className="absolute inset-0 bg-[#050117]/80 backdrop-blur-sm cursor-default"
             onClick={onClose}
@@ -67,10 +67,10 @@ function CookiePolicy({ isOpen, onClose }) {
                     className="text-xl sm:text-2xl font-bold text-white"
                     style={{ fontFamily: 'Space Grotesk, sans-serif' }}
                   >
-                    Zásady zpracování cookies
+                    Zásady ochrany osobních údajů a cookies
                   </h2>
                   <p className="text-sm text-gray-400 mt-1" style={{ fontFamily: 'Outfit, sans-serif' }}>
-                    Naposledy aktualizováno: 27. 8. 2026
+                    Naposledy aktualizováno: 28. 8. 2026
                   </p>
                 </div>
               </div>
@@ -78,7 +78,7 @@ function CookiePolicy({ isOpen, onClose }) {
               <button
                 type="button"
                 onClick={onClose}
-                aria-label="Zavřít zásady zpracování cookies"
+                aria-label="Zavřít zásady ochrany osobních údajů"
                 className="p-2 -mt-1 -mr-1 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer shrink-0"
               >
                 <X className="w-5 h-5" />
@@ -169,12 +169,88 @@ function CookiePolicy({ isOpen, onClose }) {
 
               <Section title="Kontaktní formulář a chat">
                 <p>
-                  Ve formuláři zpracováváme jméno, e-mail, vybraný balíček a text zprávy — pouze
-                  proto, abychom mohli odpovědět na vaši poptávku. Zpráva se odesílá na náš
-                  e-mail, neukládáme ji do žádné databáze a bez vašeho souhlasu ji nepoužíváme
-                  k oslovování. Konverzace s AI asistentem probíhá na našem serveru a slouží
-                  jen k zodpovězení vašeho dotazu.
+                  Ve formuláři zpracováváme <strong className="text-white">jméno, e-mail, vybraný
+                  balíček a text zprávy</strong> — pouze proto, abychom mohli odpovědět na vaši
+                  poptávku. Zpráva se odesílá na náš e-mail, bez vašeho souhlasu ji nepoužíváme
+                  k dalšímu oslovování a neposkytujeme ji třetím stranám k marketingu.
                 </p>
+                <p>
+                  Zprávy z AI asistenta se pro účel zlepšování služby a doložení případného
+                  zneužití ukládají do naší databáze (text dotazu a odpovědi). Nezadávejte do
+                  chatu citlivé údaje. Pro vygenerování odpovědi předáváme text dotazu
+                  zpracovateli <strong className="text-white">OpenAI, L.L.C.</strong> (USA) —
+                  viz „Komu údaje předáváme".
+                </p>
+              </Section>
+
+              <Section title="Právní důvod a účel zpracování">
+                <p>
+                  Údaje z formuláře zpracováváme na základě <strong className="text-white">provedení
+                  opatření před uzavřením smlouvy</strong> na vaši žádost (čl. 6 odst. 1 písm. b
+                  GDPR) a našeho <strong className="text-white">oprávněného zájmu</strong> odpovědět
+                  na poptávku a vést si o ní záznam (čl. 6 odst. 1 písm. f GDPR). Analytické
+                  cookies zpracováváme výhradně na základě <strong className="text-white">vašeho
+                  souhlasu</strong> (čl. 6 odst. 1 písm. a GDPR), který můžete kdykoli odvolat.
+                </p>
+              </Section>
+
+              <Section title="Jak dlouho údaje uchováváme">
+                <ul className="flex flex-col gap-3">
+                  <li className="flex gap-3">
+                    <span className="text-[#0EC3BF] shrink-0">•</span>
+                    <span>
+                      <strong className="text-white">Poptávky z formuláře</strong> — v e-mailové
+                      schránce po dobu vyřízení a následně po dobu nezbytnou pro případnou
+                      spolupráci, nejdéle 3 roky od posledního kontaktu.
+                    </span>
+                  </li>
+                  <li className="flex gap-3">
+                    <span className="text-[#0EC3BF] shrink-0">•</span>
+                    <span>
+                      <strong className="text-white">Konverzace s AI asistentem</strong> —
+                      v naší databázi nejdéle 12 měsíců, poté se mažou.
+                    </span>
+                  </li>
+                  <li className="flex gap-3">
+                    <span className="text-[#0EC3BF] shrink-0">•</span>
+                    <span>
+                      <strong className="text-white">Volba cookies</strong> — 12 měsíců, poté se
+                      zeptáme znovu.
+                    </span>
+                  </li>
+                </ul>
+              </Section>
+
+              <Section title="Komu údaje předáváme">
+                <p>
+                  Vaše údaje neprodáváme. Zpřístupňujeme je jen zpracovatelům, kteří nám pomáhají
+                  web provozovat:
+                </p>
+                <ul className="flex flex-col gap-3 mt-1">
+                  <li className="flex gap-3">
+                    <span className="text-[#0EC3BF] shrink-0">•</span>
+                    <span>
+                      <strong className="text-white">Poskytovatel hostingu</strong> — provoz webu,
+                      e-mailové schránky a serverové logy.
+                    </span>
+                  </li>
+                  <li className="flex gap-3">
+                    <span className="text-[#0EC3BF] shrink-0">•</span>
+                    <span>
+                      <strong className="text-white">OpenAI, L.L.C.</strong> (USA) — zpracování
+                      textu dotazů zadaných do AI asistenta. Přenos do USA je krytý standardními
+                      smluvními doložkami EU. OpenAI data z API nepoužívá k trénování modelů.
+                    </span>
+                  </li>
+                  <li className="flex gap-3">
+                    <span className="text-[#0EC3BF] shrink-0">•</span>
+                    <span>
+                      <strong className="text-white">Google Ireland Limited</strong> — měření
+                      návštěvnosti přes Google Analytics, jen pokud udělíte souhlas s analytickými
+                      cookies.
+                    </span>
+                  </li>
+                </ul>
               </Section>
 
               <Section title="Jak souhlas změnit">

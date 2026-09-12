@@ -9,6 +9,8 @@ import Footer from './components/Footer'
 import Home from './pages/Home'
 import ConnectPage from './pages/ConnectPage'
 import ServiceLanding from './pages/ServiceLanding'
+import { loadConsent } from './lib/cookieConsent'
+import { initConsentMode, applyAnalyticsConsent } from './lib/analytics'
 
 // Nekritické pro první vykreslení – načtou se v samostatných chunkech.
 const LiveChatWidget = lazy(() => import('./components/LiveChatWidget'))
@@ -58,6 +60,14 @@ function ScrollManager() {
 
 function App() {
   const [isLoading, setIsLoading] = useState(shouldShowIntro)
+
+  // Analytics: nastav výchozí (odmítavý) Consent Mode a promítni už uložený
+  // souhlas. Bez platného Measurement ID v analytics.js je to no-op.
+  useEffect(() => {
+    initConsentMode()
+    const consent = loadConsent()
+    if (consent) applyAnalyticsConsent(consent.analytics === true)
+  }, [])
 
   const finishLoading = () => {
     try {

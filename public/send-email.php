@@ -10,6 +10,7 @@ if (!empty($config['rate_limit_disabled'])) {
 }
 
 require __DIR__ . '/_ratelimit.php';
+require __DIR__ . '/_smtp.php';
 
 // --- CORS: pouze povolené domény ---
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
@@ -59,6 +60,14 @@ $name    = trim((string)($data['name'] ?? ''));
 $email   = trim((string)($data['email'] ?? ''));
 $balicek = trim((string)($data['balicek'] ?? ''));
 $message = trim((string)($data['message'] ?? ''));
+$consent = ($data['consent'] ?? false) === true;
+
+// --- GDPR: bez souhlasu se zpracováním osobních údajů poptávku nepřijímáme ---
+if (!$consent) {
+    http_response_code(422);
+    echo json_encode(['status' => 'error', 'message' => 'Bez souhlasu se zpracováním osobních údajů nelze poptávku odeslat.']);
+    exit;
+}
 
 // --- Validace ---
 $errors = [];
@@ -98,25 +107,40 @@ $body = "Jméno: $name\n"
       . "Balíček: $balicekLabel\n\n"
       . "Zpráva:\n$message\n";
 
-$headers = [
-    'From: webkozar <' . $from . '>',
-    'Reply-To: ' . $safeEmail,
-    'Content-Type: text/plain; charset=UTF-8',
-    'MIME-Version: 1.0',
-];
-
-$sent = mail(
-    $to,
-    '=?UTF-8?B?' . base64_encode($subject) . '?=',
-    $body,
-    implode("\r\n", $headers),
-    '-f' . $from
-);
+// --- Odeslání: přednostně přes autentizované SMTP (lepší doručitelnost),
+//     jinak fallback na PHP mail(). SMTP se aktivuje vyplněním smtp_* v config.php. ---
+if (smtp_configured($config)) {
+    [$sent, $smtpErr] = smtp_send_mail($config, [
+        'to'       => $to,
+        'reply_to' => $safeEmail,
+        'subject'  => $subject,
+        'body'     => $body,
+    ]);
+    if (!$sent) {
+        error_log('send-email.php: SMTP selhalo – ' . $smtpErr);
+    }
+} else {
+    $headers = [
+        'From: webkozar <' . $from . '>',
+        'Reply-To: ' . $safeEmail,
+        'Content-Type: text/plain; charset=UTF-8',
+        'MIME-Version: 1.0',
+    ];
+    $sent = mail(
+        $to,
+        '=?UTF-8?B?' . base64_encode($subject) . '?=',
+        $body,
+        implode("\r\n", $headers),
+        '-f' . $from
+    );
+    if (!$sent) {
+        error_log('send-email.php: mail() selhalo');
+    }
+}
 
 if ($sent) {
     echo json_encode(['status' => 'success', 'message' => 'E-mail byl odeslán!']);
 } else {
     http_response_code(500);
-    error_log('send-email.php: mail() selhalo');
     echo json_encode(['status' => 'error', 'message' => 'Chyba při odesílání.']);
 }

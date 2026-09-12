@@ -44,7 +44,7 @@ DirectoryIndex index.html
 # --- Zákaz přístupu k citlivým souborům --------------------------------------
 # config.php nese ostré klíče. Přes HTTP se nesmí otevřít; PHP si ho přes
 # require() načte dál (.htaccess omezuje jen HTTP požadavky, ne čtení z disku).
-<FilesMatch "^(config\.php|config\.example\.php|_ratelimit\.php)$">
+<FilesMatch "^(config\.php|config\.example\.php|_ratelimit\.php|_smtp\.php)$">
   <IfModule mod_authz_core.c>
     Require all denied
   </IfModule>

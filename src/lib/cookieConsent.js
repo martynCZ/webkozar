@@ -1,3 +1,5 @@
+import { applyAnalyticsConsent } from './analytics';
+
 export const CONSENT_STORAGE_KEY = 'webkozar-cookie-consent';
 // Verzi zvyšte, pokud se změní rozsah zpracovávaných cookies – uživatelům se lišta zobrazí znovu.
 export const CONSENT_VERSION = 1;
@@ -77,16 +79,9 @@ export function saveConsent(preferences) {
     // Signál pro zbytek aplikace (např. načtení měřicích skriptů).
     window.dispatchEvent(new CustomEvent(CONSENT_EVENT, { detail: record }));
 
-    // Google Consent Mode v2 – projeví se jen pokud je gtag na webu skutečně přítomen.
-    // Reklamní signály zůstávají zakázané – reklamní cookies web nepoužívá.
-    if (typeof window.gtag === 'function') {
-      window.gtag('consent', 'update', {
-        analytics_storage: record.analytics ? 'granted' : 'denied',
-        ad_storage: 'denied',
-        ad_user_data: 'denied',
-        ad_personalization: 'denied',
-      });
-    }
+    // GA4 + Google Consent Mode v2: promítne souhlas a po udělení načte gtag.js.
+    // Bez platného Measurement ID v analytics.js je to no-op.
+    applyAnalyticsConsent(record.analytics);
   }
 
   return record;
@@ -98,8 +93,11 @@ export function openCookieSettings() {
   window.dispatchEvent(new CustomEvent('openCookieSettings'));
 }
 
-/** Otevře zásady zpracování cookies odkudkoli. */
+/** Otevře zásady ochrany osobních údajů a cookies odkudkoli. */
 export function openCookiePolicy() {
   if (!isBrowser()) return;
   window.dispatchEvent(new CustomEvent('openCookiePolicy'));
 }
+
+/** Alias – tentýž dokument se odkazuje i jako „zásady ochrany osobních údajů". */
+export const openPrivacyPolicy = openCookiePolicy;

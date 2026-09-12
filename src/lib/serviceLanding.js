@@ -9,7 +9,7 @@ export const SERVICE_LANDINGS = {
     h1: 'Tvorba webových stránek Nový Jičín',
     lead: 'Postavíme vám web, který v Novém Jičíně i okolí přivádí zákazníky — rychlý, přehledný a připravený na vyhledávače.',
     intro:
-      'Jsme studio webkozar z okresu Nový Jičín. Weby tvoříme od úvodní analýzy přes návrh a texty až po spuštění a následnou správu. Nepoužíváme šablony napůl — každý web stavíme na míru tomu, co má firma prodávat a komu.',
+      'webkozar je tvorba webových stránek a webdesign z okresu Nový Jičín. Jsme dva a weby děláme celé sami — od úvodní analýzy přes návrh a texty až po spuštění a následnou správu. Každý web stavíme na míru tomu, co má firma prodávat a komu.',
     blocks: [
       {
         h2: 'Co v ceně webu dostanete',
@@ -26,6 +26,13 @@ export const SERVICE_LANDINGS = {
         ],
       },
       {
+        h2: 'Na čem weby stavíme',
+        p: [
+          'Podle rozsahu a rozpočtu volíme mezi webem na míru (moderní stack React, Vite, Tailwind — rychlé načítání, snadné SEO) a řešením na WordPressu s tématem Avada, které si pak zvládnete spravovat i sami. Vždycky poradíme, co se pro váš projekt hodí víc.',
+          'Doménu (přes Subreg), hosting (u Světhostingu), e-mailové schránky, SSL certifikát i zálohování vyřešíme za vás a předáme přístupy. Nejste u nás zamčení — web i podklady jsou vaše.',
+        ],
+      },
+      {
         h2: 'Weby pro firmy z Novojičínska',
         p: [
           'Máme za sebou weby pro firmy, obce, školy i spolky z Novojičínska a Ostravska — od výrobců přes služby po sportovní kluby. Konkrétní realizace si projdete v sekci reference na hlavní stránce.',
@@ -33,11 +40,11 @@ export const SERVICE_LANDINGS = {
       },
     ],
     bullets: [
-      'Web na míru, ne šablona z tržiště',
+      'Weby na míru i na WordPressu — podle toho, co dává smysl',
       'Rychlost a Core Web Vitals řešíme od začátku',
       'SEO základ v ceně každého webu',
       'Doména, hosting i e-maily vyřešíme za vás',
-      'Po spuštění správa a úpravy přes klientský portál',
+      'Po spuštění půl roku správa a drobné úpravy v ceně',
     ],
     faq: [
       {
@@ -50,7 +57,7 @@ export const SERVICE_LANDINGS = {
       },
       {
         q: 'Postaráte se o web i po spuštění?',
-        a: 'Ano. Nabízíme správu, úpravy a hosting; drobné změny zadáváte přes klientský portál Webkozar Connect.',
+        a: 'Ano. Po spuštění máte v ceně správu a drobné úpravy (texty, fotky, výměna údajů) — rozsah a délku má každý balíček v ceníku. Větší věci jako nová stránka nebo sekce jsou samostatná zakázka. Dál pokračujeme ročním předplatným nebo jednotlivými úpravami, vše přes portál Webkozar Connect.',
       },
     ],
     related: ['seo', 'webdesign'],
@@ -60,8 +67,8 @@ export const SERVICE_LANDINGS = {
     slug: '/seo-novy-jicin',
     serviceName: 'SEO optimalizace',
     kicker: 'Nový Jičín a okolí',
-    h1: 'SEO Nový Jičín — aby vás zákazníci našli',
-    lead: 'SEO optimalizace pro firmy z Nového Jičína a okolí. Cílíme na fráze, které vaši zákazníci opravdu hledají, a měříme, co to přineslo.',
+    h1: 'SEO optimalizace Nový Jičín',
+    lead: 'SEO pro firmy z Nového Jičína a okolí, aby vás zákazníci našli. Cílíme na fráze, které vaši zákazníci opravdu hledají, a měříme, co to přineslo.',
     intro:
       'SEO u nás není jednorázová „kúra". Je to práce na webu i mimo něj: technický základ, obsah, který odpovídá na dotazy lidí, a lokální signály, aby vás Google i Seznam ukázaly u výrazů typu „vaše služba Nový Jičín".',
     blocks: [
@@ -81,6 +88,13 @@ export const SERVICE_LANDINGS = {
         h2: 'Local SEO — Nový Jičín i Seznam',
         p: [
           'Vyladíme firemní profil na Googlu i zápis na Firmy.cz, sjednotíme název, adresu a telefon napříč webem a katalogy a pohlídáme recenze. V regionu je Seznam pořád silný, takže neřešíme jen Google.',
+        ],
+      },
+      {
+        h2: 'Měření a reporty',
+        p: [
+          'Na začátku si zmapujeme výchozí stav — pozice na klíčové fráze, návštěvnost z vyhledávačů a počet poptávek. Nastavíme Google Search Console a analytiku tak, aby se daly výsledky poctivě vyhodnotit.',
+          'Pak pravidelně reportujeme, co se změnilo a co děláme dál. Žádné grafy pro efekt — zajímá nás návštěvnost z organiky a hlavně poptávky, které z ní přijdou.',
         ],
       },
     ],
@@ -115,7 +129,7 @@ export const SERVICE_LANDINGS = {
     h1: 'Webdesign Nový Jičín',
     lead: 'Návrh webu, který vypadá dobře a hlavně funguje — přehledně vede návštěvníka k poptávce nebo nákupu.',
     intro:
-      'Webdesign u nás začíná u toho, co má web dělat, ne u dekorací. Nejdřív struktura a obsah, pak vizuál, který sedí vaší značce a drží se na všech zařízeních.',
+      'Webdesign pro firmy z Nového Jičína a okolí. Návrh webu u nás začíná u toho, co má web dělat, ne u dekorací — nejdřív struktura a obsah, pak vizuál, který sedí vaší značce a drží se na všech zařízeních.',
     blocks: [
       {
         h2: 'Design vedený obsahem',
@@ -133,6 +147,13 @@ export const SERVICE_LANDINGS = {
         h2: 'Vaše značka, ne šablona',
         p: [
           'Vycházíme z vašeho loga a barev, případně je doladíme. Výsledek je rozpoznatelný a konzistentní napříč webem i tiskovinami.',
+        ],
+      },
+      {
+        h2: 'Od prototypu k hotovému webu',
+        p: [
+          'Návrh děláme v prototypu, který si můžete proklikat jako hotový web — uvidíte rozložení, texty i chování na mobilu dřív, než se napíše první řádek kódu. Připomínky zapracujeme v této fázi, kdy jsou změny rychlé a levné.',
+          'Schválený design pak převedeme do kódu jedna k jedné. Stavíme ze znovupoužitelných komponent, takže web později snadno rozšíříte o další stránky ve stejném stylu.',
         ],
       },
     ],

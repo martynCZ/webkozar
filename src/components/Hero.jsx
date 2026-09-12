@@ -39,18 +39,19 @@ function Hero() {
                 animate={{ scaleX: 1 }}
                 transition={{ duration: 0.8, delay: 0.8 }}
               />
-            </span>
-            <br />
-            <span className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-gray-200">
-              Nový Jičín & Ostrava
+            </span>{' '}
+            Nový Jičín a Ostrava
+            <span className="block mt-2 text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-gray-200">
+              Moderní weby na míru se SEO optimalizací
             </span>
           </h1>
-          
-          <p 
+
+          <p
             className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto lg:mx-0"
             style={{ fontFamily: 'Outfit, sans-serif' }}
           >
-            Specializujeme se na tvorbu moderních webů, které vás odliší od konkurence. Spojujeme špičkový webdesign se silnou SEO optimalizací, aby vás zákazníci v regionu snadno našli.          </p>
+            Tvoříme moderní weby na míru pro firmy z Nového Jičína, Ostravy a okolí. Spojujeme webdesign se SEO optimalizací, aby vás zákazníci ve vyhledávání snadno našli.
+          </p>
           
           <div className="flex flex-col sm:flex-row gap-4 items-center justify-center lg:justify-start">
             <CtaButton href="#cenik" aria-label="Přejít na ceník pro získání webu">

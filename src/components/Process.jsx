@@ -43,23 +43,24 @@ function Process() {
             className="text-4xl md:text-5xl font-bold text-white mb-4"
             style={{ fontFamily: 'Space Grotesk, sans-serif' }}
           >
-            Jak se{' '}
-            <motion.span 
+            Jak tvoříme{' '}
+            <motion.span
               className="bg-gradient-to-r from-[#0EC3BF] via-purple-500 to-[#0EC3BF] bg-[length:200%_auto] bg-clip-text text-transparent"
               animate={{ backgroundPosition: ["0% center", "-200% center"] }}
-              transition={{ 
-                duration: 4, 
-                repeat: Infinity, 
-                ease: "linear" 
+              transition={{
+                duration: 4,
+                repeat: Infinity,
+                ease: "linear"
               }}
             >
-              tvoří webové stránky
+              webové stránky
             </motion.span>
           </h2>
-          <p 
-            className="text-xl text-gray-400"
+          <p
+            className="text-xl text-gray-400 max-w-2xl mx-auto"
+            style={{ fontFamily: 'Outfit, sans-serif' }}
           >
-            Náš prověřený proces od A do Z
+            Od poptávky po spuštění ve čtyřech krocích. Stejný postup platí pro weby na míru i řešení na WordPressu — jednoduchý web zvládneme za 2–3 týdny, firemní web s vlastním designem za 4–6 týdnů.
           </p>
         </motion.div>
         <div className="relative">
