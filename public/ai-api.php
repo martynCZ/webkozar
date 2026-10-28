@@ -136,6 +136,15 @@ function build_knowledge_block(array $kb): string {
         }
     }
 
+    if (!empty($kb['restricto'])) {
+        $rs = $kb['restricto'];
+        $out .= "\n{$rs['nazev']} (náš vlastní produkt, nesouvisí s tvorbou webů):\n";
+        $out .= "- {$rs['co_to_je']}\n";
+        $out .= "- {$rs['jak_funguje']}\n";
+        $out .= "- Cena: {$rs['cena']}\n";
+        $out .= "- Více: https://{$rs['adresa']}/ (na webu: {$rs['detail_na_webu']})\n";
+    }
+
     if (!empty($kb['faq'])) {
         $out .= "\nČASTÉ DOTAZY:\n";
         foreach ($kb['faq'] as $f) {

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, LayoutDashboard } from 'lucide-react';
+import { Menu, X, MonitorSmartphone } from 'lucide-react';
 import { NAV_LINKS as navLinks } from '../lib/navLinks';
 import { useBodyScrollLock } from '../lib/useBodyScrollLock';
 import CtaButton from './CtaButton';
@@ -72,9 +72,10 @@ function Header() {
     };
   }, [isHome, pathname]);
 
+  // Na `/` podle scroll-spy, na podstránce položka s její routou (Connect).
   const activeIndex = isHome
-    ? navLinks.findIndex((link) => link.hash && link.hash === activeHash)
-    : -1;
+    ? navLinks.findIndex((link) => link.hash && !link.vyrazny && link.hash === activeHash)
+    : navLinks.findIndex((link) => link.to === pathname);
   const highlightIndex = hoveredIndex ?? (activeIndex >= 0 ? activeIndex : null);
 
   const containerVars = {
@@ -95,7 +96,7 @@ function Header() {
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="fixed top-6 left-1/2 -translate-x-1/2 z-[60] w-[calc(100%-2rem)] max-w-5xl"
+        className="fixed top-6 left-1/2 -translate-x-1/2 z-[60] w-[calc(100%-2rem)] max-w-5xl xl:max-w-6xl"
       >
         <nav className="relative flex items-center justify-between px-4 sm:px-8 py-3 sm:py-4 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_0_40px_rgba(14,195,191,0.15)]">
           <Link to="/" className="flex items-center gap-2 z-50">
@@ -111,50 +112,55 @@ function Header() {
             </span>
           </Link>
 
-          <div className="hidden md:flex items-center gap-1 menu" style={{ fontFamily: 'Outfit, sans-serif' }}>
+          <div className="hidden lg:flex items-center gap-1 menu" style={{ fontFamily: 'Outfit, sans-serif' }}>
             {navLinks.map((link, index) => {
-              if (link.to) return null; // Connect je vpravo od CTA (viz níže)
+              if (link.vyrazny) return null; // Restricto je za oddělovačem (viz níže)
 
               const highlight = highlightIndex === index;
-              return (
-                <a
-                  key={link.name}
-                  href={hashHref(link.hash)}
-                  onMouseEnter={() => setHoveredIndex(index)}
-                  onMouseLeave={() => setHoveredIndex(null)}
-                  className={`relative px-4 py-2 transition-colors duration-300 z-10 ${
-                    highlight ? 'text-white' : 'text-gray-300 hover:text-white'
-                  }`}
-                >
-                  {highlight && (
-                    <motion.span
-                      layoutId="navHighlight"
-                      className="absolute inset-0 -z-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 shadow-[0_0_15px_rgba(14,195,191,0.2)]"
-                      transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
-                    />
-                  )}
+              const className = `relative whitespace-nowrap px-2 xl:px-4 py-2 transition-colors duration-300 z-10 ${
+                highlight ? 'text-white' : 'text-gray-300 hover:text-white'
+              }`;
+              const pill = highlight && (
+                <motion.span
+                  layoutId="navHighlight"
+                  className="absolute inset-0 -z-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 shadow-[0_0_15px_rgba(14,195,191,0.2)]"
+                  transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+                />
+              );
+              const hover = {
+                onMouseEnter: () => setHoveredIndex(index),
+                onMouseLeave: () => setHoveredIndex(null),
+              };
+              return link.to ? (
+                <Link key={link.name} to={link.to} {...hover} className={className}>
+                  {pill}
+                  {link.name}
+                </Link>
+              ) : (
+                <a key={link.name} href={hashHref(link.hash)} {...hover} className={className}>
+                  {pill}
                   {link.name}
                 </a>
               );
             })}
 
-            {/* Connect = samostatná stránka → za oddělovačem, s ikonou, bez rámečku. */}
+            {/* Restricto = vlastní produkt → za oddělovačem, s ikonou, barvou akcentu. */}
             {navLinks
-              .filter((link) => link.to)
+              .filter((link) => link.vyrazny)
               .map((link) => {
-                const onPage = pathname === link.to;
+                const onPage = isHome && activeHash === link.hash;
                 return (
                   <span key={link.name} className="flex items-center">
                     <span className="mx-2 h-5 w-px bg-white/20" aria-hidden="true" />
-                    <Link
-                      to={link.to}
-                      className={`relative flex items-center gap-1.5 rounded-full px-3 py-2 font-medium transition-colors duration-300 ${
+                    <a
+                      href={hashHref(link.hash)}
+                      className={`relative flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-2 font-medium transition-colors duration-300 ${
                         onPage
                           ? 'text-[#0EC3BF]'
                           : 'text-[#0EC3BF]/80 hover:bg-[#0EC3BF]/10 hover:text-[#0EC3BF]'
                       }`}
                     >
-                      <LayoutDashboard className="w-4 h-4" aria-hidden="true" />
+                      <MonitorSmartphone className="w-4 h-4" aria-hidden="true" />
                       {link.name}
                       {onPage && (
                         <span
@@ -162,18 +168,18 @@ function Header() {
                           aria-hidden="true"
                         />
                       )}
-                    </Link>
+                    </a>
                   </span>
                 );
               })}
           </div>
 
-          <div className="hidden md:block z-50">
+          <div className="hidden lg:block z-50">
             <CtaButton
               href={hashHref('#kontakt')}
               compact
               aria-label="Kontaktovat přes formulář"
-              className="shadow-[0_0_25px_rgba(14,195,191,0.45)] hover:shadow-[0_0_40px_rgba(14,195,191,0.65)]"
+              className="whitespace-nowrap shadow-[0_0_25px_rgba(14,195,191,0.45)] hover:shadow-[0_0_40px_rgba(14,195,191,0.65)]"
             >
               Kontaktujte nás
             </CtaButton>
@@ -183,7 +189,7 @@ function Header() {
             aria-label={isMobileMenuOpen ? 'Zavřít menu' : 'Otevřít menu'}
             aria-expanded={isMobileMenuOpen}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden relative z-50 p-2 text-white bg-white/5 border border-white/10 rounded-full hover:bg-white/10 transition-colors"
+            className="lg:hidden relative z-50 p-2 text-white bg-white/5 border border-white/10 rounded-full hover:bg-white/10 transition-colors"
           >
             <AnimatePresence mode="wait">
               {isMobileMenuOpen ? (
@@ -206,7 +212,7 @@ function Header() {
             initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
             animate={{ opacity: 1, backdropFilter: "blur(40px)" }}
             exit={{ opacity: 0, backdropFilter: "blur(0px)", transition: { delay: 0.3 } }}
-            className="fixed inset-0 z-50 flex items-center pt-18 justify-center bg-[#050117]/60 overflow-hidden md:hidden"
+            className="fixed inset-0 z-50 flex items-center pt-18 justify-center bg-[#050117]/60 overflow-hidden lg:hidden"
           >
             <motion.div
               animate={{ scale: [1, 1.2, 1], x: [0, 40, 0], y: [0, -30, 0] }}
@@ -223,7 +229,7 @@ function Header() {
               initial="initial"
               animate="open"
               exit="initial"
-              className="relative z-10 flex flex-col items-center gap-8 w-full px-8"
+              className="relative z-10 flex flex-col items-center gap-5 w-full px-8"
             >
               {navLinks.map((link) => (
                 <div key={link.name} className="overflow-hidden">
@@ -232,7 +238,7 @@ function Header() {
                       <Link
                         to={link.to}
                         onClick={closeMenu}
-                        className="text-4xl font-bold text-[#0EC3BF] hover:text-white transition-colors duration-300"
+                        className="text-4xl font-bold text-white/80 hover:text-white transition-colors duration-300"
                         style={{ fontFamily: 'Space Grotesk, sans-serif' }}
                       >
                         {link.name}
@@ -241,7 +247,9 @@ function Header() {
                       <a
                         href={hashHref(link.hash)}
                         onClick={closeMenu}
-                        className="text-4xl font-bold text-white/80 hover:text-white transition-colors duration-300"
+                        className={`text-4xl font-bold hover:text-white transition-colors duration-300 ${
+                          link.vyrazny ? 'text-[#0EC3BF]' : 'text-white/80'
+                        }`}
                         style={{ fontFamily: 'Space Grotesk, sans-serif' }}
                       >
                         {link.name}
@@ -251,7 +259,7 @@ function Header() {
                 </div>
               ))}
 
-              <div className="overflow-hidden mt-8 w-full max-w-xs">
+              <div className="overflow-hidden mt-4 w-full max-w-xs">
                 <motion.div variants={linkVars}>
                   <CtaButton
                     href={hashHref('#kontakt')}

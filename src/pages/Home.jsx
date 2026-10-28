@@ -4,6 +4,7 @@ import Process from '../components/Process'
 import Pricing from '../components/Pricing'
 import Technologies from '../components/Technologies'
 import WebkozarConnect from '../components/WebkozarConnect'
+import Restricto from '../components/Restricto'
 import { Reference } from '../components/Reference'
 import Faq from '../components/Faq'
 import Form from '../Form'
@@ -21,6 +22,7 @@ function Home() {
       <Pricing />
       <Technologies />
       <WebkozarConnect />
+      <Restricto />
       <Reference />
       <Faq />
       <Form />

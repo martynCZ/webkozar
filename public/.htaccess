@@ -38,6 +38,14 @@
   RewriteRule . /index.html [L]
 </IfModule>
 
+# --- Bez automatického přesměrování /cesta -> /cesta/ ------------------------
+# Hosting běží za nginx proxy; DirectorySlash by složil adresu se špatným
+# schématem (301 na http://webkozar.cz:443/connect/) a předběhl by pravidlo
+# výše, které prerenderovanou složku servíruje i bez lomítka. Proto vypnuto.
+<IfModule mod_dir.c>
+  DirectorySlash Off
+</IfModule>
+
 # Když už složka index.html má, ať ho Apache bere jako výchozí dokument.
 DirectoryIndex index.html
 
